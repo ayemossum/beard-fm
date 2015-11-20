@@ -1,0 +1,11 @@
+{
+	"name": "beard.fm",
+	"version": "1.0.0",
+	"author": "ayemossum (the beard)",
+	"dependencies": {
+		"express": "~4.13.3",
+		"jade": "~1.11.0",
+		"gulp": "~3.9.0"
+	}
+	"license": "UNLICENSED"
+}
