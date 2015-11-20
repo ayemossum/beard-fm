@@ -1,0 +1,6 @@
+@each $index in (1,2,3,4,5) {
+  .chat-window .message:nth-last-child(#{$index}) {
+    color: color(text-subdued);
+  }
+}
+

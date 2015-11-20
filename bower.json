@@ -1,0 +1,23 @@
+{
+  "name": "beard.fm",
+  "description": "Beard.fm group media player",
+  "main": "app.js",
+  "authors": [
+    "ayemossum"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/ayemossum/beard-fm",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "breakpoint": "~4.6.4",
+    "singularity": "~1.6.2"
+  }
+}

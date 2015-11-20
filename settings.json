@@ -1,0 +1,4 @@
+{
+	"view engine": "jade",
+	"view cache": true
+}

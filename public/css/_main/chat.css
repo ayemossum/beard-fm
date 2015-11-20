@@ -1,0 +1,14 @@
+.chat-window .message:nth-last-child(1) {
+  color: color(text-subdued); }
+
+.chat-window .message:nth-last-child(2) {
+  color: color(text-subdued); }
+
+.chat-window .message:nth-last-child(3) {
+  color: color(text-subdued); }
+
+.chat-window .message:nth-last-child(4) {
+  color: color(text-subdued); }
+
+.chat-window .message:nth-last-child(5) {
+  color: color(text-subdued); }

@@ -1,0 +1,50 @@
+html, body {
+  color: color(text-color);
+  padding: 0;
+  margin: 0;
+  font-family: "Roboto", sans-serif; }
+
+h1 {
+  margin: 0;
+  padding: 10px 20px; }
+
+header {
+  background-color: color(header-background);
+  color: color(header-color);
+  font-family: "Titillium Web", sans-serif;
+  font-weight: bold;
+  height: 70px;
+  z-index: 500;
+  position: fixed;
+  top: 0;
+  width: 100%; }
+
+header .unlock {
+  color: color(header-background);
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 10px;
+  width: 10px;
+  font-size: 10px; }
+
+footer {
+  z-index: 500;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  height: 35px;
+  background-color: color(footer-background);
+  color: color(footer-color);
+  padding: 10px;
+  font-weight: 200;
+  font-family: "Titillium Web", sans-serif; }
+
+footer .powered-by {
+  height: 25px;
+  font-size: 20px;
+  line-height: 25px;
+  margin: 0 10px; }
+
+.align-center {
+  text-align: center; }

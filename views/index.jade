@@ -1,0 +1,19 @@
+doctype html
+head
+	link(rel="stylesheet", href="/css/main.css")
+	title= title
+	script(src="/js/jquery.js")
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/main.js")
+	script(src="/js/templates.js")
+body
+	header
+		h1.header= title
+		.unlock.fa.fa-lock
+	.main-content
+		.chat-window.col-md-8.col-sm-12
+			include ./_chat
+		.media-window.col-md-4.col-sm-12
+			include ./_media
+	include ./_footer
+
