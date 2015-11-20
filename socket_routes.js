@@ -3,7 +3,7 @@ var media_queue = [];
 var connected_users = {};
 var admin_users = [];
 var max_user_timeout = 600000;
-var last_id = 0;
+var shortid = require('shortid');
 function userUnlock(data){
 	console.log('userUnlock');
 	console.log(data);
@@ -17,13 +17,14 @@ function user(data){
 	last_seen(this.userId);
 }
 function register(data){
+	if (!data.id) data.id = shortid.generate();
+	connected_users[id]=data.name;
+	socket.userId=data.id;
 	last_seen(this.userId);
 }
 module.exports = function(io) {
 	io.sockets.on('connect',function(socket) {
-		id=++last_id;
-		socket.userId=id;
-		socket.emit("connected",{userId: id});
+		socket.emit("connected");
 		socket.on('register',register);
 		socket.on('userUnlock',userUnlock);
 		socket.on('chat',chat);
