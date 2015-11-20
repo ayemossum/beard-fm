@@ -1,19 +1,48 @@
+var chat_messages = [];
+var media_queue = [];
+var connected_users = {};
+var admin_users = [];
+var max_user_timeout = 600000;
+var last_id = 0;
 function userUnlock(data){
 	console.log('userUnlock');
 	console.log(data);
 	this.emit('user','admin');
+	last_seen(this.userId);
 };
-function chat(socket,data){
-	
+function chat(data){
+	last_seen(this.userId);
 }
-function user(socket,data){
-	
+function user(data){
+	last_seen(this.userId);
+}
+function register(data){
+	last_seen(this.userId);
 }
 module.exports = function(io) {
 	io.sockets.on('connect',function(socket) {
-		socket.emit("connected");
+		id=++last_id;
+		socket.userId=id;
+		socket.emit("connected",{userId: id});
+		socket.on('register',register);
 		socket.on('userUnlock',userUnlock);
 		socket.on('chat',chat);
 		socket.on('user',user);
+		socket.on('disconnect',disconnectUser);
 	});
 };
+
+function last_seen(id) {
+	if (connected_users[id]) {
+		connected_users[id].last_seen = (new Date()).getTime();
+	}
+}
+
+setInterval(function(){
+	var now = (new Date()).getTime();
+	for (id in connected_users) {
+		if (connected_users[id].last_seen + max_user_timeout < now) {
+			disconnectUser(id);
+		}
+	}
+},2000);
