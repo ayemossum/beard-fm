@@ -1,6 +1,6 @@
 doctype html
 head
-	link(rel="stylesheet", href="/css/main.css")
+	link(rel="stylesheet", href="/css/main.css?cb="+run_id)
 	title= title
 body
 	header
@@ -22,4 +22,4 @@ body
 	script(src="/socket.io/socket.io.js")
 	script(src="/js/jade-runtime.js")
 	script(src="/js/templates.js")
-	script(src="/js/main.js")
+	script(src="/js/main.js?cb="+run_id)
