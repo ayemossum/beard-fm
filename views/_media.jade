@@ -1,10 +1,12 @@
 .media-box
 	#player.player
 	.controls
-		.control.vote-up.fa.fa-chevron-up
-		.text vote
 		.control.vote-down.fa.fa-chevron-down
+		.text vote
+		.control.vote-up.fa.fa-chevron-up
 		.control.volume
+			.fa.fa-volume-up
+			input(type="range",min=0,max=100,value=90)
 
 .media-list
 	include _medialist
