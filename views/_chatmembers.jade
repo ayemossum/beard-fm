@@ -1,3 +1,4 @@
 ul.chat-members-list
 	each user in users
-		li(data-user-id=user.userId,class="chat-member"+(userId==user.userId ? " current-user" : ""))= user.userName
+		if !user.disconnected
+			li(data-user-id=user.userId,class="chat-member"+(userId==user.userId ? " current-user" : ""))= user.userName

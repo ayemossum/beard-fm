@@ -1,4 +1,4 @@
-.chat-message(data-user-id=authorId)
+.chat-message(data-user-id=authorId,class=users[authorId].disconnected ? 'disconnected' : '')
 	if message.substr(0,3)=='/me'
 		.td
 		.td
