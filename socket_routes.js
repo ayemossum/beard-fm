@@ -5,15 +5,20 @@ var admin_users = [];
 var max_user_timeout = 600000;
 var previous_video = '';
 var shortid = require('shortid');
+var sanitizer = require('sanitizer');
+var can_resume = true;
 
-module.exports = function(io,adminpass) {
+module.exports = function(io,adminpass,run_id) {
 	function userUnlock(data){
 		console.log('userUnlock');
 		this.emit('user',{action: data===adminpass ? 'admin' : 'noadmin'});
 		last_seen(this.userId);
 	};
 	function chat(data){
-		io.sockets.emit('chat',{authorId: this.userId, message: data});
+		var message = {authorId: this.userId, message: sanitizer.sanitize(data.message)};
+		io.sockets.emit('chat',message);
+		chat_messages.push(message);
+		if (chat_messages.lenth > 100) chat_messages=chat_messages.slice(-100);
 		last_seen(this.userId);
 	}
 	function user(data){
@@ -24,18 +29,17 @@ module.exports = function(io,adminpass) {
 		if (!data.userId) data.userId = shortid.generate();
 		connected_users[data.userId]=data;
 		this.userId=data.userId;
+		data.userName=sanitizer.sanitize(data.userName);
 		last_seen(this.userId);
 		io.sockets.emit('user',{action:'add',user:{userId:data.userId,userName:data.userName}});
 		this.emit('user',{action:eventName,userId:data.userId,userName:data.userName});
 	}
 	function disconnectUser(data) {
-		delete connected_users[this.userId];
-		io.sockets.emit('user',{action:'remove',id:this.userId});
+		//delete connected_users[this.userId];
+		io.sockets.emit('user',{action:'remove',id:this.userId}); 
 	}
 	function getInit() {
-		var members = [];
-		for (i in connected_users) {members.push(connected_users[i])};
-		this.emit('datainit',{members: members, media: media_queue});
+		this.emit('datainit',{members: connected_users, media: media_queue, messages: chat_messages.slice(-30)});
 	}
 	function addMedia(data) {
 		data.seek=0;
@@ -44,12 +48,41 @@ module.exports = function(io,adminpass) {
 		}
 		media_queue.push(data);
 		io.sockets.emit('addMedia',data);
+		last_seen(this.userId);
 	}
 	function videoNext(data) {
 		if (previous_video==data.previous) return;
 		previous_video=data.previous;
 		media_queue = media_queue.slice(1);
 		io.sockets.emit('videoNext',media_queue[0]);
+		last_seen(this.userId);
+	}
+	function vote(data) {
+		console.log(data);
+		if (!media_queue[0].votes) {
+			media_queue[0].votes = {'up':[],'down':[]};
+		}
+		console.log(media_queue[0].votes);
+		var other = data == 'up' ? 'down' : 'up';
+		if (media_queue[0].votes[other].indexOf(this.userId)) {
+			media_queue[0].votes[other].splice(media_queue[0].votes[other].indexOf(this.userId),1);
+		}
+		if (media_queue[0].votes[data].indexOf(this.userId)>=0) return;
+		media_queue[0].votes[data].push(this.userId);
+		console.log(media_queue[0].votes.down.length, media_queue[0].votes.up.length);
+		if (media_queue[0].votes.down.length - media_queue[0].votes.up.length >= 2) videoNext({previous: media_queue[0].videoId});
+		last_seen(this.userId);
+	}
+	function resume(data) {
+		this.emit('restart');
+		if (!can_resume) {
+			return;
+		}
+		can_resume=false;
+		media_queue=data.media_queue;
+		connected_users=data.users;
+		chat_messages = data.chat_messages;
+		this.emit('restart');
 	}
 	
 	function last_seen(id) {
@@ -59,7 +92,7 @@ module.exports = function(io,adminpass) {
 	}
 	
 	io.sockets.on('connect',function(socket) {
-		socket.emit("connected");
+		socket.emit("connected",{run_id: run_id});
 		socket.on('register',register);
 		socket.on('userUnlock',userUnlock);
 		socket.on('chat',chat);
@@ -68,6 +101,8 @@ module.exports = function(io,adminpass) {
 		socket.on('disconnect',disconnectUser);
 		socket.on('getInit',getInit);
 		socket.on('videoNext',videoNext);
+		socket.on('vote',vote);
+		socket.on('resume',resume);
 	});
 	
 	
