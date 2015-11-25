@@ -27,16 +27,23 @@ module.exports = function(io,adminpass,run_id) {
 	function register(data){
 		eventName = this.userId ? 'rename' : 'connected';
 		if (!data.userId) data.userId = shortid.generate();
-		connected_users[data.userId]=data;
+		connected_users[data.userId]=data; 
 		this.userId=data.userId;
 		data.userName=sanitizer.sanitize(data.userName);
 		last_seen(this.userId);
-		io.sockets.emit('user',{action:'add',user:{userId:data.userId,userName:data.userName}});
-		this.emit('user',{action:eventName,userId:data.userId,userName:data.userName});
+		io.sockets.emit('user',{action:'add',user:{userId:data.userId,userName:data.userName,disconnected: false}});
+		this.emit('user',{action:eventName,userId:data.userId,userName:data.userName,disconnected: false});
 	}
 	function disconnectUser(data) {
 		//delete connected_users[this.userId];
-		io.sockets.emit('user',{action:'remove',id:this.userId}); 
+		if (!data) return;
+		var userId = data.userId ? data.userId : data;
+		if (!connected_users || !connected_users[userId]) return;
+		connected_users[userId].disconnected=true;
+		io.sockets.emit('user',{action:'remove',userId: userId}); 
+	}
+	function disconnectMe() {
+		disconnectUser(this.userId);
 	}
 	function getInit() {
 		this.emit('datainit',{members: connected_users, media: media_queue, messages: chat_messages.slice(-30)});
@@ -58,18 +65,15 @@ module.exports = function(io,adminpass,run_id) {
 		last_seen(this.userId);
 	}
 	function vote(data) {
-		console.log(data);
 		if (!media_queue[0].votes) {
 			media_queue[0].votes = {'up':[],'down':[]};
 		}
-		console.log(media_queue[0].votes);
 		var other = data == 'up' ? 'down' : 'up';
 		if (media_queue[0].votes[other].indexOf(this.userId)) {
 			media_queue[0].votes[other].splice(media_queue[0].votes[other].indexOf(this.userId),1);
 		}
 		if (media_queue[0].votes[data].indexOf(this.userId)>=0) return;
 		media_queue[0].votes[data].push(this.userId);
-		console.log(media_queue[0].votes.down.length, media_queue[0].votes.up.length);
 		if (media_queue[0].votes.down.length - media_queue[0].votes.up.length >= 2) videoNext({previous: media_queue[0].videoId});
 		last_seen(this.userId);
 	}
@@ -81,6 +85,9 @@ module.exports = function(io,adminpass,run_id) {
 		can_resume=false;
 		media_queue=data.media_queue;
 		connected_users=data.users;
+		for (u in connected_users) {
+			connected_users[u].disconnected=true;
+		}
 		chat_messages = data.chat_messages;
 		this.emit('restart');
 	}
@@ -103,6 +110,7 @@ module.exports = function(io,adminpass,run_id) {
 		socket.on('videoNext',videoNext);
 		socket.on('vote',vote);
 		socket.on('resume',resume);
+		socket.on('disconnect',disconnectMe);
 	});
 	
 	
@@ -110,10 +118,11 @@ module.exports = function(io,adminpass,run_id) {
 		var now = (new Date()).getTime();
 		for (id in connected_users) {
 			if (connected_users[id] && connected_users[id].last_seen && connected_users[id].last_seen + max_user_timeout < now) {
-				disconnectUser(id);
+				if (!connected_users[id].disconnected) 
+					disconnectUser(id);
 			}
 		}
-	},2000);
+	},100);
 	setInterval(function(){
 		if (media_queue && media_queue.length>0) {
 			media_queue[0].seek++;
