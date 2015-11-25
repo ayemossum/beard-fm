@@ -44,4 +44,8 @@
 		animation: fall-off 1s;
 		transform: translateY(100%);
 	}
+	&.open {
+		animation: fall-on 1s;
+		transform: none;
+	}
 }

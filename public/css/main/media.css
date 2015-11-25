@@ -28,11 +28,21 @@
       .media-window .media-box .controls .text {
         display: inline-block;
         padding: 0 1em; }
-      .media-window .media-box .controls .control, .media-window .media-box .controls .text {
+      .media-window .media-box .controls .control {
+        font-size: 2em;
+        margin: 1em;
         transform: translateZ(100px);
         transition: all 0.5s ease-in-out;
         transition-delay: 0.1s;
         opacity: 0; }
+      .media-window .media-box .controls .text {
+        display: none; }
+      .media-window .media-box .controls .control.vote-up:hover, .media-window .media-box .controls .control.vote-up.voted {
+        color: color(voted-up); }
+      .media-window .media-box .controls .control.vote-down:hover, .media-window .media-box .controls .control.vote-down.voted {
+        color: color(voted-down); }
+      .media-window .media-box .controls.mine .control.vote-up, .media-window .media-box .controls.mine .control.vote-down, .media-window .media-box .controls.mine .text {
+        display: none; }
       .media-window .media-box .controls:hover {
         opacity: 1; }
         .media-window .media-box .controls:hover .control {

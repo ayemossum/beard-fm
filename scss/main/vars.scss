@@ -15,6 +15,8 @@ $colors: (
   media-background: #082008,
   media-color: #909090,
   media-controls-background: rgba(0,0,0,0.7),
+  voted-down: #f07070,
+  voted-up: #70f070,
   blazing: #fff,
   modal-background: #a0f0a0,
   modal-color: #202020,
@@ -22,7 +24,10 @@ $colors: (
   close-hover-color: #a05050,
   chat-member-background: #c0c0c0,
   chat-member-color: #202020,
-  chat-member-border: #202020
+  chat-member-border: #202020,
+  chat-current-user-background: #b0d0b0,
+  chat-message-background: #f8f8f8,
+  chat-message-alternate-background: #f0f0f0
 );
 
 $sizes: (

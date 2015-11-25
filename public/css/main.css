@@ -2089,6 +2089,16 @@
   100% {
     transform: translateY(120%); } }
 
+@keyframes fall-on {
+  0% {
+    transform: translateY(-120%); }
+  10% {
+    transform: translateY(-88%); }
+  20% {
+    transform: translateY(-86%); }
+  100% {
+    transform: translateY(0); } }
+
 @keyframes enter-from-left {
   0% {
     transform: translateX(-120%); }
@@ -2188,23 +2198,52 @@ footer .powered-by {
         display: inline-block;
         background-color: #c0c0c0;
         color: #202020;
-        padding: 5px;
+        padding: 3px;
         height: 20px;
         font-size: 10px;
         border: 1px solid #202020;
-        border-radius: 5px; }
+        border-radius: 5px;
+        margin-right: 5px; }
+        .chat-window .chat-members .chat-members-list .chat-member.current-user {
+          background-color: #b0d0b0;
+          cursor: pointer; }
   .chat-window .chat-messages {
     position: absolute;
     left: 0;
     right: 7px;
     top: 30px;
-    bottom: 35px; }
-    .chat-window .chat-messages .chat-message .author {
-      display: inline-block;
-      overflow: hidden;
-      width: 30%;
-      float: left;
-      clear: left; }
+    bottom: 35px;
+    overflow: auto; }
+    .chat-window .chat-messages .chat-table {
+      display: table;
+      width: 100%;
+      border-collapse: collapse; }
+      .chat-window .chat-messages .chat-table .chat-message {
+        display: table-row; }
+        .chat-window .chat-messages .chat-table .chat-message:nth-child(2n) {
+          background-color: #f0f0f0; }
+        .chat-window .chat-messages .chat-table .chat-message.disconnected {
+          color: #808080; }
+        .chat-window .chat-messages .chat-table .chat-message .td {
+          display: table-cell;
+          padding: 3px;
+          vertical-align: middle; }
+          .chat-window .chat-messages .chat-table .chat-message .td.username {
+            width: 10%; }
+          .chat-window .chat-messages .chat-table .chat-message .td .author {
+            overflow: hidden;
+            white-space: nowrap;
+            float: left;
+            clear: left;
+            max-width: 200px;
+            padding-right: 3px;
+            font-weight: bolder; }
+          .chat-window .chat-messages .chat-table .chat-message .td .message-text {
+            padding-left: 15px;
+            width: 100%; }
+            .chat-window .chat-messages .chat-table .chat-message .td .message-text img {
+              display: inline-block;
+              max-width: 100%; }
   .chat-window .chat-entry {
     position: absolute;
     bottom: 0;
@@ -2280,11 +2319,21 @@ footer .powered-by {
       .media-window .media-box .controls .text {
         display: inline-block;
         padding: 0 1em; }
-      .media-window .media-box .controls .control, .media-window .media-box .controls .text {
+      .media-window .media-box .controls .control {
+        font-size: 2em;
+        margin: 1em;
         transform: translateZ(100px);
         transition: all 0.5s ease-in-out;
         transition-delay: 0.1s;
         opacity: 0; }
+      .media-window .media-box .controls .text {
+        display: none; }
+      .media-window .media-box .controls .control.vote-up:hover, .media-window .media-box .controls .control.vote-up.voted {
+        color: #70f070; }
+      .media-window .media-box .controls .control.vote-down:hover, .media-window .media-box .controls .control.vote-down.voted {
+        color: #f07070; }
+      .media-window .media-box .controls.mine .control.vote-up, .media-window .media-box .controls.mine .control.vote-down, .media-window .media-box .controls.mine .text {
+        display: none; }
       .media-window .media-box .controls:hover {
         opacity: 1; }
         .media-window .media-box .controls:hover .control {
@@ -2427,3 +2476,6 @@ footer .powered-by {
   .register-window.close {
     animation: fall-off 1s;
     transform: translateY(100%); }
+  .register-window.open {
+    animation: fall-on 1s;
+    transform: none; }

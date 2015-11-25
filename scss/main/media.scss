@@ -33,11 +33,31 @@
 				display: inline-block;
 				padding: 0 1em;
 			}
-			.control, .text {
+			.control {
+				font-size: 2em;
+				margin: 1em;
 				transform: translateZ(100px);
 				transition: all 0.5s ease-in-out;
 				transition-delay: 0.1s;
 				opacity: 0;
+			}
+			.text {
+				display: none;
+			}
+			.control.vote-up {
+				&:hover, &.voted {
+					color: color(voted-up);
+				}
+			}
+			.control.vote-down {
+				&:hover, &.voted {
+					color: color(voted-down);
+				}
+			}
+			&.mine {
+				.control.vote-up, .control.vote-down, .text{
+					display: none;
+				}
 			}
 			&:hover {
 				opacity: 1;

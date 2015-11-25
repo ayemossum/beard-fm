@@ -38,3 +38,6 @@
   .register-window.close {
     animation: fall-off 1s;
     transform: translateY(100%); }
+  .register-window.open {
+    animation: fall-on 1s;
+    transform: none; }

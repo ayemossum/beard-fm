@@ -12,23 +12,52 @@
         display: inline-block;
         background-color: color(chat-member-background);
         color: color(chat-member-color);
-        padding: 5px;
+        padding: 3px;
         height: 20px;
         font-size: 10px;
         border: 1px solid color(chat-member-border);
-        border-radius: 5px; }
+        border-radius: 5px;
+        margin-right: 5px; }
+        .chat-window .chat-members .chat-members-list .chat-member.current-user {
+          background-color: color(chat-current-user-background);
+          cursor: pointer; }
   .chat-window .chat-messages {
     position: absolute;
     left: 0;
     right: 7px;
     top: 30px;
-    bottom: 35px; }
-    .chat-window .chat-messages .chat-message .author {
-      display: inline-block;
-      overflow: hidden;
-      width: 30%;
-      float: left;
-      clear: left; }
+    bottom: 35px;
+    overflow: auto; }
+    .chat-window .chat-messages .chat-table {
+      display: table;
+      width: 100%;
+      border-collapse: collapse; }
+      .chat-window .chat-messages .chat-table .chat-message {
+        display: table-row; }
+        .chat-window .chat-messages .chat-table .chat-message:nth-child(2n) {
+          background-color: color(chat-message-alternate-background); }
+        .chat-window .chat-messages .chat-table .chat-message.disconnected {
+          color: color(text-subdued); }
+        .chat-window .chat-messages .chat-table .chat-message .td {
+          display: table-cell;
+          padding: 3px;
+          vertical-align: middle; }
+          .chat-window .chat-messages .chat-table .chat-message .td.username {
+            width: 10%; }
+          .chat-window .chat-messages .chat-table .chat-message .td .author {
+            overflow: hidden;
+            white-space: nowrap;
+            float: left;
+            clear: left;
+            max-width: 200px;
+            padding-right: 3px;
+            font-weight: bolder; }
+          .chat-window .chat-messages .chat-table .chat-message .td .message-text {
+            padding-left: 15px;
+            width: 100%; }
+            .chat-window .chat-messages .chat-table .chat-message .td .message-text img {
+              display: inline-block;
+              max-width: 100%; }
   .chat-window .chat-entry {
     position: absolute;
     bottom: 0;

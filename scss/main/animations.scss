@@ -12,6 +12,20 @@
 		transform: translateY(120%);
 	}
 }
+@keyframes fall-on {
+	0% {
+		transform: translateY(-120%);
+	}
+	10% {
+		transform: translateY(-88%);
+	}
+	20% {
+		transform: translateY(-86%);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
 @keyframes enter-from-left{
 	0% {
 		transform: translateX(-120%);
