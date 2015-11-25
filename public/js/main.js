@@ -14,9 +14,66 @@ function gapiLoaded(){google_loaded=true;}
 		userId: null,
 		playerReady: false,
 		apiKey: 'AIzaSyDeGY1MfcSN53qzzM-xkD43Oun9GekWFTc',
-		media_queue: []
+		media_queue: [],
+		notifications_allowed: false,
+		run_id: null,
+		chat_messages: []
 	};
+	if ("Notification" in window) {
+		if (Notification.permission === 'granted') appState.notifications_allowed=true;
+		else if (Notification.permission !== 'denied') {
+			Notification.requestPermission(function(result){ if (result === 'denied' || result === 'defualt') return; appState.notifications_allowed=true;});
+		}
+	}
 	window.__appState=appState;
+	function notify (msgtype, msg) {
+		if (!appState.notifications_allowed || !msgtype || (document.hasFocus && document.hasFocus())) return;
+		var notification = new Notification(msgtype,{body:msg});
+		notification.onclick=function(){
+			notification.close();
+		}
+		setTimeout(function(){notification.close()},5000);
+		
+	}
+	function findUrls( text )
+	{
+		var source = (text || '').toString();
+		var urlArray = [];
+		var url;
+		var matchArray;
+
+		// Regular expression to find FTP, HTTP(S) and email URLs.
+		var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
+
+		// Iterate through any URLs in the text.
+		while( (matchArray = regexToken.exec( source )) !== null )
+		{
+			var token = matchArray[0];
+			urlArray.push( token );
+		}
+
+		return urlArray;
+	}
+	
+	function urlify(text) {
+		var urls = findUrls(text);
+		if (urls.length==0) return text;
+		$.each(urls, function(i,url){
+			var bits = url.split('.');
+			switch(bits[bits.length-1]) {
+				case 'jpg':
+				case 'jpeg':
+				case 'gif':
+				case 'png':
+					text=text.replace(url,'<img src="'+url+'">');
+					break;
+				default:
+					text=text.replace(url,'<a href="'+url+'">'+url+'</a>');
+					break;
+			}
+		});
+		return text;
+	}
 	function playerReady(e) {
 		appState.playerReady=true;
 		console.info('PLAYER IS LOADED?');
@@ -25,15 +82,12 @@ function gapiLoaded(){google_loaded=true;}
 		}
 	}
 	function playerStateChange(e) {
-		console.log('state changed to %s',e.data);
 		if (e.data===YT.PlayerState.ENDED) {
-			console.log('get me another');
 			socket.emit('videoNext',{previous: player.getVideoData().video_id});
 		}
 	}
 	function playerStartup() {
 		if (appState.media_queue.length>0) playVideo(appState.media_queue[0].videoId, appState.media_queue[0].seek);
-		clearInterval(seek_advance);
 	}
 	function becomeAdmin() {
 		console.log("%s is now admin",appState.userName);
@@ -45,27 +99,53 @@ function gapiLoaded(){google_loaded=true;}
 			player.seekTo(time);
 		}
 		player.playVideo();
+		
+		if (appState.media_queue[0].userId == appState.userId) $('.media-box .controls').addClass('mine');
+		else $('.media-box .controls').removeClass('mine');
+		notify('Playing Video',appState.media_queue[0].title);
 	}
 	function addUser(user) {
+		if (appState.users[user.userId] && appState.users[user.userId].userName != user.userName) notify('User Renamed',appState.users[user.userId].userName + ' is now known as ' + user.userName);
+		else notify('User Connected',user.userName);
 		appState.users[user.userId]=user;
 		$('.chat-members').html(chatmembers({userId: appState.userId, users:appState.users}));
+		$('.chat-window .chat-message[data-user-id='+user.userId+'] .author').text(user.userName).removeClass('disconnected');
 	}
-	if (localStorage) {
-		appState.userName = localStorage.getItem('userName');
-		if (appState.userName) appState.userId = localStorage.getItem('userId');
-		$('.register-box .user-name').val(appState.userName);
+	function removeUser(userId) {
+		notify('User Disonnected',appState.users[userId].userName);
+		appState.users[userId].disconnected=true;
+		$('.chat-message[data-user-id='+userId+']').addClass('disconnected');
+		$('.chat-members').html(chatmembers({userId: appState.userId, users:appState.users}));
+		if (appState.userId==userId) socket.emit('register',{userId:userId,userName:appState.userName});
 	}
-	chat_box_entry = $('.js-chat-box-entry');
+	chat_box_entry = $('.chat-window .chat-input');
 
 	socket.on('chat',function(value) {
-		value = typeof value === 'string' ? JSON.parse(value) : value;
-		if (value instanceof Array) $('.chat-messages').html(chatmessages(value));
-		else $('.chat-messages').append(chatmessage(value));
+		if (value instanceof Array) {
+			$.each(value, function(i,single) {
+				single.users=appState.users;
+				single.userId=appState.userId;
+				single.message=urlify(single.message);
+				$('.chat-messages .chat-table').append(chatmessage(single));
+				appState.chat_messages.push(single);
+			});
+			$('.chat-messages').prop('scrollTop',$('.chat-messages .chat-table').height());
+		} 
+		else {
+			value.message=urlify(value.message)
+			value.userId=appState.userId;
+			value.users=appState.users;	
+			$('.chat-messages .chat-table').append(chatmessage(value));
+			$('.chat-messages').prop('scrollTop',$('.chat-messages .chat-table').height());
+			appState.chat_messages.push(value);
+			notify(appState.users[value.authorId].userName, value.message.length > 20 ? value.message.substr(0,20)+'...' : value.message);
+		}
 	});
 	socket.on('user',function(value){
 		value = typeof value === 'string' ? JSON.parse(value) : value;
 		switch (value.action){
 			case 'connected':
+				console.log('connected');
 				appState.connected=true;
 				appState.userName=value.userName;
 				appState.userId=value.userId;
@@ -76,16 +156,22 @@ function gapiLoaded(){google_loaded=true;}
 				if (appState.playerReady) {
 					playerStartup();
 				}
-				$(".register-window").addClass('close');
+				$(".register-window").addClass('close').removeClass('open');
 				$(".add-media").addClass('show');
 				break;
 			case 'rename':
 				appState.userName=value.userName;
-				$(".register-window").addClass('close');
+				if (localStorage) {
+					localStorage.setItem('userName',appState.userName);
+				}
+				$(".register-window").addClass('close').removeClass('open');
 				$(".add-media").addClass('show');
+				$('.chat-window .chat-message[data-user-id='+value.userId+'] .author').text(value.userName);
+				$('.chat-message[data-user-id='+value.userId+']').removeClass('disconnected');
 				break;
 			case 'add':
 				addUser(value.user);
+				$('.chat-window .chat-message[data-user-id='+value.userId+'] .author').text(value.userName);
 				break;
 			case 'remove':
 				removeUser(value.userId);
@@ -108,10 +194,6 @@ function gapiLoaded(){google_loaded=true;}
 			else $('.media-box .controls').removeClass('mine');
 		}
 	});
-	socket.on('chat',function(value) {
-		value.author = appState.users[value.authorId];
-		$('.chat-messages').append(chatmessage(value));
-	});
 	socket.on('addMedia',function(value) {
 		appState.media_queue.push(value);
 		$('.media-list').html(medialist({userId: appState.userId, media: appState.media_queue}));
@@ -133,25 +215,35 @@ function gapiLoaded(){google_loaded=true;}
 			});
 		}
 		if (!played) {
+			notify('Video Queue','Queue is empty. Refill it.')
 			player.stopVideo();
 			player.clearVideo();
 			appState.media_queue=[];
 		}
 	});
+	socket.on('connected',function(data){
+		if (appState.run_id && appState.run_id != data.run_id) socket.emit('resume',appState)
+		else appState.run_id=data.run_id;
+	});
+	socket.on('restart',function(){
+		location=location.href;
+	});
 	socket.on('datainit',function(values){
-		console.log(values);
 		appState.users=values.members;
-		console.log(appState.users);
 		$('.chat-members').html(chatmembers({userId: appState.userId, users:appState.users}));
 		appState.media_queue = values.media;
 		$('.media-list').html(medialist({userId: appState.userId, media: appState.media_queue}));
+		appState.chat_messages = values.messages;
+		$.each(values.messages, function(i,message) {message.users = appState.users; message.message = urlify(message.message); $('.chat-messages .chat-table').append(chatmessage(message)); $('.chat-messages').prop('scrollTop',$('.chat-messages .chat-table').height());});
 	});
-	socket.emit('getInit');
 	chat_box_entry.on('keypress',(e) => {
 		if (e.which==13) {
-			socket.emit('chat',{message: 'chat:'+chat_box_entry.val()});
-			chat_box_entry.val('');
+			$('.chat-window .chat-send').click();
 		}
+	});
+	$('.chat-window').on('click','.chat-send',function() {
+			socket.emit('chat',{message: chat_box_entry.val()});
+			chat_box_entry.val('');
 	});
 	$('.unlock').on('click',function(e){
 			socket.emit('userUnlock',prompt('Password please'));
@@ -185,10 +277,24 @@ function gapiLoaded(){google_loaded=true;}
 		})
 	});
 	$('.main-content').on('click','.media-adder .search-results .video-result',function(e) {
+		$(this).remove();
 		video_data = $(this).data();
 		video_data.userId=appState.userId;
-		console.log(video_data);
 		socket.emit('addMedia',video_data);
+	});
+	$('.chat-members').on('dblclick','.chat-member.current-user',function(){
+		$('.register-window').addClass('open').removeClass('close');
+		$(".add-media").remove('show');
+	});
+	$('.media-box .vote-up').on('click',function(){
+		$('.media-box .vote-down').removeClass('voted');
+		$(this).addClass('voted');
+		socket.emit('vote','up');
+	});
+	$('.media-box .vote-down').on('click',function(){
+		$('.media-box .vote-up').removeClass('voted');
+		$(this).addClass('voted');
+		socket.emit('vote','down');
 	});
 	window.onYouTubeIframeAPIReady=function(){
 		
@@ -197,7 +303,14 @@ function gapiLoaded(){google_loaded=true;}
 			events: {
 				onStateChange: playerStateChange,
 				onReady: playerReady
-			}	
+			},
+			playerVars: {
+				rel: 0,
+				enablejsapi: true,
+				controls: 0,
+				showinfo: 0,
+				modestbranding: 1
+			}
 		});
 	};
 	seek_advance = setInterval(function(){
@@ -217,4 +330,17 @@ function gapiLoaded(){google_loaded=true;}
 		setTimeout(proceed,1);
 	});
 	$.getScript('https://www.youtube.com/iframe_api',function(){});
+	
+	if (localStorage) {
+		appState.userName = localStorage.getItem('userName');
+		$('.register-box .user-name').val(appState.userName);
+		if (appState.userName) {
+			appState.userId = localStorage.getItem('userId');
+			$('.user-name-button').click();
+		}
+	}
+	socket.emit('getInit');
+	setInterval(function(){
+		$.get('/ping',function(response){});
+	},600000);
 })(jQuery);
