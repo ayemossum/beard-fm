@@ -3,6 +3,9 @@ var app = express();
 var settings = require('./settings.json');
 var defaults = require('./defaults.json');
 var socketio = require('socket.io');
+var process = require('process');
+var listen_port = process.env.PORT || 3000;
+var adminpass = process.env.ADMIN || 'youshallnotpass';
 for (key in settings) {
 	app.set(key, settings[key]);
 }
@@ -14,10 +17,10 @@ app.get('/', function (req, res) {
 
 var server = require('http').Server(app);
 var io = socketio.listen(server);
-require('./socket_routes.js')(io);
+require('./socket_routes.js')(io,adminpass);
 
 
-server.listen(3000, function() {
+server.listen(listen_port, function() {
 	var host = server.address().address;
 	var port = server.address().port;
 

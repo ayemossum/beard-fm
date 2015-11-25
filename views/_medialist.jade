@@ -1,0 +1,4 @@
+if media
+	ol.media-queue
+		each item in media
+			li.media(data-user-id=item.userId,data-video-id=item.videoId)= item.title

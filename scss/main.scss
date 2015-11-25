@@ -5,14 +5,16 @@
 **/
 
 @import "_singularitygs";
+@import "_breakpoint";
 @import "main/fonts";
 @import "font-awesome/font-awesome";
 
 @import "main/vars";
 @import "main/functions";
 @import "main/grid";
+@import "main/animations";
 
 @import "main/globals";
 @import "main/chat";
 @import "main/media";
-
+@import "main/register";

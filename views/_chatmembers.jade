@@ -1,0 +1,3 @@
+ul.chat-members-list
+	each user in users
+		li(data-user-id=user.id,class="chat-member"+(userId==user.id ? " current-user" : ""))= user.userName

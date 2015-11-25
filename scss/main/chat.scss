@@ -1,3 +1,75 @@
+.chat-window {
+	position: relative;
+	height: 100%;
+	.chat-members {
+		height: 30px;
+		width: 100%;
+		overflow: auto;
+		.chat-members-list {
+			list-style-type: none;
+			margin: 0;
+			.chat-member {
+				display: inline-block;
+				background-color: color(chat-member-background);
+				color: color(chat-member-color);
+				padding: 5px;
+				height: 20px;
+				font-size: 10px;
+				border: 1px solid color(chat-member-border);
+				border-radius: 5px;
+			}
+		}
+	}
+	.chat-messages {
+		position: absolute;
+		left: 0;
+		right: 7px;
+		top: 30px;
+		bottom: 35px;
+		.chat-message {
+			.author {
+				display: inline-block;
+				overflow: hidden;
+				width: 30%;
+				float: left;
+				clear: left;
+			}
+		}
+	}
+	.chat-entry {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 35px;
+		.chat-input {
+			background-color: color(chat-entry-background);
+			font-size: 1em;
+			height: 33px;
+			padding: 5px;
+			border-radius: 5px 0 0 5px;
+			border: 1px solid color(chat-entry-border);
+			border-right-width: 0;
+			width: calc( 100% - 65px );
+		}
+		.chat-send {
+			border: 1px solid color(chat-send-border);
+			border-left-width: 0;
+			color: color(chat-send-color);
+			background-color: color(chat-send-background);
+			transition: background-color 0.5s ease-in-out;
+			height: 33px;
+			width: 58px;
+			padding: 5px;
+			border-radius: 0 5px 5px 0;
+			font-size: 1em;
+			line-height: 1em;
+			&:hover {
+				background-color: color(chat-send-background-hover);
+			}
+		}
+	}
+}
 @each $index in (1,2,3,4,5) {
   .chat-window .message:nth-last-child(#{$index}) {
     color: color(text-subdued);

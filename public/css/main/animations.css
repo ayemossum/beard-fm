@@ -1,0 +1,29 @@
+@keyframes fall-off {
+  0% {
+    transform: translateY(0); }
+  10% {
+    transform: translateY(10%); }
+  20% {
+    transform: translateY(12%); }
+  100% {
+    transform: translateY(120%); } }
+
+@keyframes enter-from-left {
+  0% {
+    transform: translateX(-120%); }
+  10% {
+    transform: translateX(-90%); }
+  20% {
+    transform: translateX(-88%); }
+  100% {
+    transform: translateX(0); } }
+
+@keyframes leave-to-left {
+  0% {
+    transform: translateX(0); }
+  10% {
+    transform: translateX(-10%); }
+  20% {
+    transform: translateX(-12%); }
+  100% {
+    transform: translateX(-120%); } }

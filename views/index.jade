@@ -2,18 +2,24 @@ doctype html
 head
 	link(rel="stylesheet", href="/css/main.css")
 	title= title
-	script(src="/js/jquery.js")
-	script(src="/socket.io/socket.io.js")
-	script(src="/js/main.js")
-	script(src="/js/templates.js")
 body
 	header
 		h1.header= title
+		.add-media.fa.fa-plus
 		.unlock.fa.fa-lock
 	.main-content
-		.chat-window.col-md-8.col-sm-12
-			include ./_chat
-		.media-window.col-md-4.col-sm-12
+		.chat-window.col-md-2.col-sm
+			include ./_chatbox
+		.media-adder
+			include ./_addmedia
+		.media-window.col-md-1.col-sm
 			include ./_media
+		.register-window
+			include ./_register
 	include ./_footer
-
+	
+	script(src="/js/jquery.js")
+	script(src="/socket.io/socket.io.js")
+	script(src="/js/jade-runtime.js")
+	script(src="/js/templates.js")
+	script(src="/js/main.js")

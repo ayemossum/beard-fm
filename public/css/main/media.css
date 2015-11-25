@@ -1,3 +1,136 @@
-.media-box {
-  height: size(vid-h-small);
-  width: size(vid-w-small); }
+.media-window {
+  position: relative;
+  height: 100%;
+  background-color: color(media-background);
+  color: color(media-color); }
+  .media-window .media-box {
+    position: relative; }
+    .media-window .media-box .player {
+      height: size(vid-h-small);
+      width: 100%;
+      border: 0; }
+    .media-window .media-box .controls {
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      perspective: 200px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: color(media-controls-background);
+      text-align: center;
+      height: size(vid-h-small); }
+      .media-window .media-box .controls:before {
+        display: block;
+        content: "";
+        padding-top: size(vid-h-small)/2.5; }
+      .media-window .media-box .controls .text {
+        display: inline-block;
+        padding: 0 1em; }
+      .media-window .media-box .controls .control, .media-window .media-box .controls .text {
+        transform: translateZ(100px);
+        transition: all 0.5s ease-in-out;
+        transition-delay: 0.1s;
+        opacity: 0; }
+      .media-window .media-box .controls:hover {
+        opacity: 1; }
+        .media-window .media-box .controls:hover .control {
+          opacity: 0.5;
+          transform: translateZ(-20px);
+          transition-delay: 0;
+          cursor: pointer; }
+          .media-window .media-box .controls:hover .control:hover {
+            opacity: 1;
+            transform: none; }
+        .media-window .media-box .controls:hover .text {
+          opacity: 1;
+          transform: none; }
+  .media-window .media-list {
+    list-style-type: decimal;
+    list-style-type: decimal-leading-zero;
+    font-size: 1.2em; }
+    .media-window .media-list .media-item {
+      margin: 5px; }
+    .media-window .media-list .delete {
+      display: none; }
+    .media-window .media-list.mine .delete {
+      display: block; }
+
+.add-media {
+  display: none;
+  font-size: 1.5em;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  color: color(text-subdued);
+  transition: color 0.5s ease-in-out; }
+  .add-media.show {
+    display: block; }
+  .add-media:hover {
+    color: color(blazing); }
+
+.media-adder {
+  z-index: 200;
+  height: 100%;
+  padding: 30px 30px 10px 10px;
+  transform: translateX(-120%);
+  background: color(modal-background);
+  color: color(modal-color); }
+  .media-adder.open {
+    animation: enter-from-left 1s;
+    transform: none; }
+  .media-adder.close {
+    animation: leave-to-left 1s; }
+  .media-adder .close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    color: color(close-color);
+    transition: color 0.5s ease-in-out; }
+    .media-adder .close-button:hover {
+      color: color(close-hover-color); }
+  .media-adder .media-search {
+    background-color: color(chat-entry-background);
+    font-size: 1em;
+    height: 33px;
+    padding: 5px;
+    border-radius: 5px 0 0 5px;
+    border: 1px solid color(chat-entry-border);
+    border-right-width: 0;
+    width: calc( 100% - 73px); }
+  .media-adder .media-search-button {
+    border: 1px solid color(chat-send-border);
+    border-left-width: 0;
+    color: color(chat-send-color);
+    background-color: color(chat-send-background);
+    transition: background-color 0.5s ease-in-out;
+    height: 33px;
+    width: 73px;
+    padding: 5px;
+    border-radius: 0 5px 5px 0;
+    font-size: 1em;
+    line-height: 1em; }
+    .media-adder .media-search-button:hover {
+      background-color: color(chat-send-background-hover); }
+  .media-adder .resultsbox {
+    overflow: auto;
+    height: calc( 100% - 24px); }
+  .media-adder .search-results {
+    list-style-type: none; }
+    .media-adder .search-results .video-result {
+      display: table-row;
+      clear: both;
+      cursor: pointer;
+      vertical-align: middle; }
+      .media-adder .search-results .video-result .video-thumb {
+        display: table-cell;
+        float: left;
+        vertical-align: middle;
+        margin: 5px; }
+      .media-adder .search-results .video-result .video-title {
+        display: table-cell;
+        clear: right;
+        vertical-align: middle; }

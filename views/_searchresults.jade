@@ -1,0 +1,6 @@
+ul.search-results
+	each video in items
+		li.video-result(data-title=video.snippet.title,data-video-id=video.id.videoId,data-thumb=video.snippet.thumbnails.default.url)
+			img(src=video.snippet.thumbnails.default.url).video-thumb
+			.video-title= video.snippet.title
+		

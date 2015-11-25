@@ -1,3 +1,30 @@
+@import "_breakpoint";
+@import "_singularitygs";
 
-/*@include add-grid(6);
-@include add-gutter(1em);*/
+@include add-grid(1);
+@include add-grid(4 3 at 700px);
+@include add-gutter(0px);
+
+.chat-window {
+	@include grid-span(1);
+	@include breakpoint(700px) {
+		@include grid-span(1,1);
+	}
+}
+.media-window {
+	@include grid-span(1);
+	@include breakpoint(700px) {
+		@include grid-span(1,2);
+	}
+}
+.register-window {
+	@include grid-span(1);
+}
+
+.media-adder {
+	position: relative;
+	@include grid-span(1);
+	@include breakpoint(700px) {
+		@include grid-span(1,1);
+	}
+}
