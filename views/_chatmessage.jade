@@ -1,3 +1,13 @@
-.chat-message
-	.author= author
-	.message-text= text
+.chat-message(data-user-id=authorId)
+	if message.substr(0,3)=='/me'
+		.td
+		.td
+			.message-text.me
+				span.author= users[authorId].userName
+				!{message.replace(/\/me/,'')}
+	else
+		.td.username
+			.author= users[authorId].userName
+		.td
+			.message-text !{message}
+	.td.ts= ts
