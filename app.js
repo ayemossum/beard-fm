@@ -6,18 +6,23 @@ var socketio = require('socket.io');
 var process = require('process');
 var listen_port = process.env.PORT || 3000;
 var adminpass = process.env.ADMIN || 'youshallnotpass';
+var shortid = require('shortid');
+var run_id = shortid();
 for (key in settings) {
 	app.set(key, settings[key]);
 }
 app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-	res.render('index', { title: defaults.title } );
+	res.render('index', { title: defaults.title, run_id: run_id } );
+});
+app.get('/ping', function(req,res){
+	res.body('pong').end();
 });
 
 var server = require('http').Server(app);
 var io = socketio.listen(server);
-require('./socket_routes.js')(io,adminpass);
+require('./socket_routes.js')(io,adminpass,run_id);
 
 
 server.listen(listen_port, function() {
