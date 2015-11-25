@@ -17,7 +17,7 @@ gulp.task('start', function () {
 });
 
 gulp.task('sass', function () {
-  gulp.src('scss/**/*.scss')
+  gulp.src('scss/*.scss')
     .pipe(sass({includePaths: ["./node_modules/singularitygs/stylesheets/","./node_modules/breakpoint-sass/stylesheets/"]}).on('error',sass.logError))
     .pipe(gulp.dest('./public/css'));
 });
