@@ -2315,7 +2315,11 @@ footer .powered-by {
       .media-window .media-box .controls:before {
         display: block;
         content: "";
-        padding-top: 144px; }
+        padding-top: 72px; }
+      .media-window .media-box .controls.mine:before {
+        display: block;
+        content: "";
+        padding-top: 120px; }
       .media-window .media-box .controls .text {
         display: inline-block;
         padding: 0 1em; }

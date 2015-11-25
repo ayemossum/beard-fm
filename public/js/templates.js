@@ -83,7 +83,7 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (media, undefined) {
-buf.push("<div class=\"media-box\"><div id=\"player\" class=\"player\"></div><div class=\"controls\"><div class=\"control vote-down fa fa-chevron-down\"></div><div class=\"text\">vote</div><div class=\"control vote-up fa fa-chevron-up\"></div><div class=\"control volume\"><div class=\"fa fa-volume-up\"></div><input type=\"range\" min=\"0\" max=\"100\" value=\"90\"/></div></div></div><div class=\"media-list\">");
+buf.push("<div class=\"media-box\"><div id=\"player\" class=\"player\"></div><div class=\"controls\"><div class=\"control vote-down fa fa-chevron-down\"></div><div class=\"text\">vote</div><div class=\"control vote-up fa fa-chevron-up\"></div><div class=\"control volume\"><div class=\"muting fa fa-volume-up\"></div><input type=\"range\" min=\"0\" max=\"100\" value=\"90\"/></div></div></div><div class=\"media-list\">");
 if ( media)
 {
 buf.push("<ol class=\"media-queue\">");

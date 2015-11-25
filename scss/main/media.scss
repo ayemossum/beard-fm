@@ -27,7 +27,12 @@
 			&:before {
 				display:block;
 				content: "";
-				padding-top: size(vid-h-small) / 2.5
+				padding-top: size(vid-h-small) / 5
+			}
+			&.mine:before {
+				display:block;
+				content: "";
+				padding-top: size(vid-h-small) / 3
 			}
 			.text {
 				display: inline-block;

@@ -6,6 +6,7 @@ function gapiLoaded(){google_loaded=true;}
 	window.__socket = socket;
 	var chat_box_entry;
 	var seek_advance;
+	var unmute_volume;
 	var appState = {
 		users: {},
 		userName: null,
@@ -87,6 +88,8 @@ function gapiLoaded(){google_loaded=true;}
 		}
 	}
 	function playerStartup() {
+		$('.controls .volume input').val(player.getVolume());
+		unmute_volume = $('.controls .volume input').val() > 0 ? $('.controls .volume input').val() : 90;
 		if (appState.media_queue.length>0) playVideo(appState.media_queue[0].videoId, appState.media_queue[0].seek);
 	}
 	function becomeAdmin() {
@@ -157,6 +160,7 @@ function gapiLoaded(){google_loaded=true;}
 					playerStartup();
 				}
 				$(".register-window").addClass('close').removeClass('open');
+				$(".chat-member[data-user-id="+appState.userId+"]").addClass('current-user');
 				$(".add-media").addClass('show');
 				break;
 			case 'rename':
@@ -295,6 +299,31 @@ function gapiLoaded(){google_loaded=true;}
 		$('.media-box .vote-up').removeClass('voted');
 		$(this).addClass('voted');
 		socket.emit('vote','down');
+	});
+	$('.media-box .volume input').on('input',function(e){
+		player.setVolume(this.value);
+	});
+	$('.media-box .volume input').on('change',function(e){
+		if (this.value==0) {
+			$('.volume .muting').removeClass('fa-volume-up').addClass('fa-volume-off');
+		}
+		else {
+			$('.volume .muting').addClass('fa-volume-up').removeClass('fa-volume-off');
+			unmute_volume = this.value;
+		}
+	});
+	$('.media-box .volume .muting').on('click',function(e){
+		$('.volume .muting').toggleClass('fa-volume-up fa-volume-off');
+		if ($('.volume .muting').hasClass('fa-volume-up')) {
+			$('.media-box .volume input').val(unmute_volume);
+			player.setVolume(unmute_volume);
+		}
+		else {
+			unmute_volume = $('.media-box .volume input').val();
+			$('.media-box .volume input').val(0);
+			player.setVolume(0);
+		}
+		
 	});
 	window.onYouTubeIframeAPIReady=function(){
 		
