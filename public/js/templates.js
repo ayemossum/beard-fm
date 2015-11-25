@@ -10,14 +10,14 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 
-buf.push("<input class=\"chat-input\"/><button type=\"button\" class=\"chat-send\">Send</button>");;return buf.join("");
+buf.push("<input maxlength=\"90\" class=\"chat-input\"/><button type=\"button\" class=\"chat-send\">Send</button>");;return buf.join("");
 }
 function chatbox(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
 
-buf.push("<div class=\"chat-members\"></div><div class=\"chat-messages\"></div><div class=\"chat-entry\"><input class=\"chat-input\"/><button type=\"button\" class=\"chat-send\">Send</button></div>");;return buf.join("");
+buf.push("<div class=\"chat-members\"></div><div class=\"chat-messages\"><div class=\"chat-table\"></div></div><div class=\"chat-entry\"><input maxlength=\"90\" class=\"chat-input\"/><button type=\"button\" class=\"chat-send\">Send</button></div>");;return buf.join("");
 }
 function chatmembers(locals) {
 var buf = [];
@@ -33,7 +33,10 @@ buf.push("<ul class=\"chat-members-list\">");
     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
       var user = $$obj[$index];
 
-buf.push("<li" + (jade.attr("data-user-id", user.id, true, false)) + (jade.cls(["chat-member"+(userId==user.id ? " current-user" : "")], [true])) + ">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)) + "</li>");
+if ( !user.disconnected)
+{
+buf.push("<li" + (jade.attr("data-user-id", user.userId, true, false)) + (jade.cls(["chat-member"+(userId==user.userId ? " current-user" : "")], [true])) + ">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)) + "</li>");
+}
     }
 
   } else {
@@ -41,7 +44,10 @@ buf.push("<li" + (jade.attr("data-user-id", user.id, true, false)) + (jade.cls([
     for (var $index in $$obj) {
       $$l++;      var user = $$obj[$index];
 
-buf.push("<li" + (jade.attr("data-user-id", user.id, true, false)) + (jade.cls(["chat-member"+(userId==user.id ? " current-user" : "")], [true])) + ">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)) + "</li>");
+if ( !user.disconnected)
+{
+buf.push("<li" + (jade.attr("data-user-id", user.userId, true, false)) + (jade.cls(["chat-member"+(userId==user.userId ? " current-user" : "")], [true])) + ">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)) + "</li>");
+}
     }
 
   }
@@ -53,8 +59,17 @@ function chatmessage(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (author, text) {
-buf.push("<div class=\"chat-message\"><div class=\"author\">" + (jade.escape(null == (jade_interp = author) ? "" : jade_interp)) + "</div><div class=\"message-text\">" + (jade.escape(null == (jade_interp = text) ? "" : jade_interp)) + "</div></div>");}.call(this,"author" in locals_for_with?locals_for_with.author:typeof author!=="undefined"?author:undefined,"text" in locals_for_with?locals_for_with.text:typeof text!=="undefined"?text:undefined));;return buf.join("");
+;var locals_for_with = (locals || {});(function (authorId, message, ts, users) {
+buf.push("<div" + (jade.attr("data-user-id", authorId, true, false)) + (jade.cls(['chat-message',users[authorId].disconnected ? 'disconnected' : ''], [null,true])) + ">");
+if ( message.substr(0,3)=='/me')
+{
+buf.push("<div class=\"td\"></div><div class=\"td\"><div class=\"message-text me\"><span class=\"author\">" + (jade.escape(null == (jade_interp = users[authorId].userName) ? "" : jade_interp)) + "</span>" + (((jade_interp = message.replace(/\/me/,'')) == null ? '' : jade_interp)) + "</div></div>");
+}
+else
+{
+buf.push("<div class=\"td username\"><div class=\"author\">" + (jade.escape(null == (jade_interp = users[authorId].userName) ? "" : jade_interp)) + "</div></div><div class=\"td\"><div class=\"message-text\">" + (((jade_interp = message) == null ? '' : jade_interp)) + "</div></div>");
+}
+buf.push("<div class=\"td ts\">" + (jade.escape(null == (jade_interp = ts) ? "" : jade_interp)) + "</div></div>");}.call(this,"authorId" in locals_for_with?locals_for_with.authorId:typeof authorId!=="undefined"?authorId:undefined,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined,"ts" in locals_for_with?locals_for_with.ts:typeof ts!=="undefined"?ts:undefined,"users" in locals_for_with?locals_for_with.users:typeof users!=="undefined"?users:undefined));;return buf.join("");
 }
 function footer(locals) {
 var buf = [];
@@ -68,7 +83,7 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (media, undefined) {
-buf.push("<div class=\"media-box\"><div id=\"player\" class=\"player\"></div><div class=\"controls\"><div class=\"control vote-up fa fa-chevron-up\"></div><div class=\"text\">vote</div><div class=\"control vote-down fa fa-chevron-down\"></div><div class=\"control volume\"></div></div></div><div class=\"media-list\">");
+buf.push("<div class=\"media-box\"><div id=\"player\" class=\"player\"></div><div class=\"controls\"><div class=\"control vote-down fa fa-chevron-down\"></div><div class=\"text\">vote</div><div class=\"control vote-up fa fa-chevron-up\"></div><div class=\"control volume\"><div class=\"fa fa-volume-up\"></div><input type=\"range\" min=\"0\" max=\"100\" value=\"90\"/></div></div></div><div class=\"media-list\">");
 if ( media)
 {
 buf.push("<ol class=\"media-queue\">");
