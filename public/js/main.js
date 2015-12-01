@@ -231,6 +231,7 @@ function gapiLoaded(){google_loaded=true;}
 			player.clearVideo();
 			appState.media_queue=[];
 		}
+		$('.voted').removeClass('voted');
 	});
 	socket.on('mediaRefresh',function(value) {
 		appState.media_queue=value.media_queue;
