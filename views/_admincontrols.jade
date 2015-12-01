@@ -1,0 +1,17 @@
+.admin-controls(class=replace ? "noanim" : "")
+	ul.admin-users-list.close
+		each user in users
+			if !user.disconnected
+				li.user(data-user-id=user.userId)
+					= user.userName
+					if user.userId != userId
+						.caret.fa.fa-caret-right
+						.tooltip
+							.js-boot.fa.fa-user-times
+							.js-rename.fa.fa-edit
+							.js-adminify.fa.fa-unlock
+							.js-disadminify.fa.fa-lock
+							.js-ban.fa.fa-unlink
+	.js-admin-users.fa.fa-users.admin-control
+	.js-admin-next.fa.fa-step-forward.admin-control
+	.js-admin-stop.fa.fa-stop.admin-control

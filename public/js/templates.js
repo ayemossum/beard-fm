@@ -5,6 +5,52 @@ var jade_interp;
 ;var locals_for_with = (locals || {});(function (button) {
 buf.push("<div class=\"close-button fa fa-close\"></div><div class=\"searchbox\"><input class=\"media-search\"/><button" + (jade.attr("type", button, true, false)) + " class=\"media-search-button\">Search</button></div><div class=\"resultsbox\">No Results</div>");}.call(this,"button" in locals_for_with?locals_for_with.button:typeof button!=="undefined"?button:undefined));;return buf.join("");
 }
+function admincontrols(locals) {
+var buf = [];
+var jade_mixins = {};
+var jade_interp;
+;var locals_for_with = (locals || {});(function (replace, undefined, userId, users) {
+buf.push("<div" + (jade.cls(['admin-controls',replace ? "noanim" : ""], [null,true])) + "><ul class=\"admin-users-list close\">");
+// iterate users
+;(function(){
+  var $$obj = users;
+  if ('number' == typeof $$obj.length) {
+
+    for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+      var user = $$obj[$index];
+
+if ( !user.disconnected)
+{
+buf.push("<li" + (jade.attr("data-user-id", user.userId, true, false)) + " class=\"user\">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)));
+if ( user.userId != userId)
+{
+buf.push("<div class=\"caret fa fa-caret-right\"></div><div class=\"tooltip\"><div class=\"js-boot fa fa-user-times\"></div><div class=\"js-rename fa fa-edit\"></div><div class=\"js-adminify fa fa-unlock\"></div><div class=\"js-disadminify fa fa-lock\"></div><div class=\"js-ban fa fa-unlink\"></div></div>");
+}
+buf.push("</li>");
+}
+    }
+
+  } else {
+    var $$l = 0;
+    for (var $index in $$obj) {
+      $$l++;      var user = $$obj[$index];
+
+if ( !user.disconnected)
+{
+buf.push("<li" + (jade.attr("data-user-id", user.userId, true, false)) + " class=\"user\">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)));
+if ( user.userId != userId)
+{
+buf.push("<div class=\"caret fa fa-caret-right\"></div><div class=\"tooltip\"><div class=\"js-boot fa fa-user-times\"></div><div class=\"js-rename fa fa-edit\"></div><div class=\"js-adminify fa fa-unlock\"></div><div class=\"js-disadminify fa fa-lock\"></div><div class=\"js-ban fa fa-unlink\"></div></div>");
+}
+buf.push("</li>");
+}
+    }
+
+  }
+}).call(this);
+
+buf.push("</ul><div class=\"js-admin-users fa fa-users admin-control\"></div><div class=\"js-admin-next fa fa-step-forward admin-control\"></div><div class=\"js-admin-stop fa fa-stop admin-control\"></div></div>");}.call(this,"replace" in locals_for_with?locals_for_with.replace:typeof replace!=="undefined"?replace:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined,"userId" in locals_for_with?locals_for_with.userId:typeof userId!=="undefined"?userId:undefined,"users" in locals_for_with?locals_for_with.users:typeof users!=="undefined"?users:undefined));;return buf.join("");
+}
 function chat(locals) {
 var buf = [];
 var jade_mixins = {};
