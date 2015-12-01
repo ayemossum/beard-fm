@@ -2099,6 +2099,39 @@
   100% {
     transform: translateY(0); } }
 
+@keyframes lift-off {
+  0% {
+    transform: translateY(0); }
+  10% {
+    transform: translateY(-86%); }
+  20% {
+    transform: translateY(-88%); }
+  100% {
+    transform: translateY(-120%); } }
+
+@keyframes roll-from-top {
+  0% {
+    height: auto;
+    max-height: 0;
+    overflow: hidden; }
+  10% {
+    max-height: 20px; }
+  20% {
+    max-height: 25px; }
+  100% {
+    max-height: 1000px;
+    overflow: visible; } }
+
+@keyframes roll-to-top {
+  0% {
+    transform: scaleY(0); }
+  10% {
+    transform: scaleY(0.86); }
+  20% {
+    transform: scaleY(0.88); }
+  100% {
+    transform: scaleY(1); } }
+
 @keyframes enter-from-left {
   0% {
     transform: translateX(-120%); }
@@ -2109,15 +2142,63 @@
   100% {
     transform: translateX(0); } }
 
+@keyframes enter-from-right {
+  0% {
+    transform: translateX(120%); }
+  10% {
+    transform: translateX(90%); }
+  20% {
+    transform: translateX(88%); }
+  100% {
+    transform: translateX(0); } }
+
 @keyframes leave-to-left {
   0% {
+    display: block;
     transform: translateX(0); }
   10% {
     transform: translateX(-10%); }
   20% {
     transform: translateX(-12%); }
   100% {
+    display: none;
     transform: translateX(-120%); } }
+
+@keyframes leave-to-right {
+  0% {
+    display: block;
+    transform: translateX(0); }
+  10% {
+    transform: translateX(10%); }
+  20% {
+    transform: translateX(12%); }
+  100% {
+    display: none;
+    transform: translateX(120%); } }
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(1deg); }
+  10% {
+    transform: rotate(-1deg); }
+  20% {
+    transform: rotate(1deg); }
+  30% {
+    transform: rotate(-1deg); }
+  40% {
+    transform: rotate(1deg); }
+  50% {
+    transform: rotate(-1deg); }
+  60% {
+    transform: rotate(1deg); }
+  70% {
+    transform: rotate(-1deg); }
+  80% {
+    transform: rotate(1deg); }
+  90% {
+    transform: rotate(-1deg); }
+  100% {
+    transform: rotate(1deg); } }
 
 * {
   box-sizing: border-box; }
@@ -2218,6 +2299,9 @@ footer .powered-by {
       display: table;
       width: 100%;
       border-collapse: collapse; }
+      .chat-window .chat-messages .chat-table:empty:after {
+        content: "Type something";
+        animation: wiggle 4s infinite; }
       .chat-window .chat-messages .chat-table .chat-message {
         display: table-row; }
         .chat-window .chat-messages .chat-table .chat-message:nth-child(2n) {
@@ -2327,8 +2411,9 @@ footer .powered-by {
         font-size: 2em;
         margin: 1em;
         transform: translateZ(100px);
-        transition: all 0.5s ease-in-out;
-        transition-delay: 0.1s;
+        transition-property: transform, color;
+        transition-duration: 0.5s, 0.4s;
+        transition-delay: 0.1s 0s;
         opacity: 0; }
       .media-window .media-box .controls .text {
         display: none; }
@@ -2342,7 +2427,7 @@ footer .powered-by {
         opacity: 1; }
         .media-window .media-box .controls:hover .control {
           opacity: 0.5;
-          transform: translateZ(-20px);
+          transform: translateZ(-10px);
           transition-delay: 0;
           cursor: pointer; }
           .media-window .media-box .controls:hover .control:hover {
@@ -2361,6 +2446,11 @@ footer .powered-by {
       display: none; }
     .media-window .media-list.mine .delete {
       display: block; }
+    .media-window .media-list .media-queue:empty:after {
+      content: "Add some videos";
+      position: relative;
+      top: 30px;
+      animation: wiggle 4s infinite; }
 
 .add-media {
   display: none;
@@ -2483,3 +2573,55 @@ footer .powered-by {
   .register-window.open {
     animation: fall-on 1s;
     transform: none; }
+
+.admin-controls {
+  position: absolute;
+  right: 50px;
+  top: 20px;
+  animation: enter-from-right 1s; }
+  .admin-controls.noanim {
+    animation: none; }
+  .admin-controls .admin-control {
+    padding: 0 10px; }
+    .admin-controls .admin-control:hover {
+      color: #faa; }
+  .admin-controls .fa {
+    cursor: pointer; }
+  .admin-controls .admin-users-list {
+    background-color: #cfc;
+    color: #333;
+    list-style-type: none;
+    position: absolute;
+    display: none;
+    transform: translateX(-100%);
+    width: 400px; }
+    .admin-controls .admin-users-list.open {
+      animation: roll-from-top 0.5s;
+      height: auto; }
+    .admin-controls .admin-users-list.close {
+      animation: roll-to-top 0.5s;
+      overflow: hidden;
+      height: 0; }
+    .admin-controls .admin-users-list .user {
+      position: relative; }
+      .admin-controls .admin-users-list .user .caret {
+        position: absolute;
+        top: 0;
+        right: 10px; }
+      .admin-controls .admin-users-list .user .tooltip {
+        position: absolute;
+        top: 0;
+        right: 0;
+        overflow: hidden;
+        width: 0;
+        background-color: #efe;
+        color: #333;
+        transition: all 0.5s ease-in-out; }
+        .admin-controls .admin-users-list .user .tooltip .fa {
+          display: block;
+          text-align: center; }
+      .admin-controls .admin-users-list .user:hover .tooltip {
+        width: 2em;
+        right: -2em; }
+  .admin-controls.close {
+    animation: leave-to-right 1s; }
