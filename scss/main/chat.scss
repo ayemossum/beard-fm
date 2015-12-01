@@ -36,6 +36,10 @@
 			display: table;
 			width: 100%;
 			border-collapse: collapse;
+			&:empty:after {
+				content: "Type something";
+				animation: wiggle 4s infinite;
+			}
 			.chat-message {
 				display: table-row;
 				&:nth-child(2n) {
