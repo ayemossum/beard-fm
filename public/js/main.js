@@ -95,6 +95,11 @@ function gapiLoaded(){google_loaded=true;}
 	function becomeAdmin() {
 		console.log("%s is now admin",appState.userName);
 		appState.admin=true;
+		$('header').append(admincontrols({userId: appState.userId, users: $.extend({},appState.users)}));
+	}
+	function leaveAdmin() {
+		appState.admin=false;
+		$('.admin-controls').addClass('close').on('animationend webkitAnimationEnd MSAnimationEnd',function(e){$(this).remove()});
 	}
 	function playVideo(videoId,time) {
 		player.cueVideoById(videoId)
@@ -112,7 +117,7 @@ function gapiLoaded(){google_loaded=true;}
 		else notify('User Connected',user.userName);
 		appState.users[user.userId]=user;
 		$('.chat-members').html(chatmembers({userId: appState.userId, users:appState.users}));
-		$('.chat-window .chat-message[data-user-id='+user.userId+'] .author').text(user.userName).removeClass('disconnected');
+		$('.chat-window .chat-message[data-user-id='+user.userId+']').removeClass('disconnected').find('.author').text(user.userName);
 	}
 	function removeUser(userId) {
 		notify('User Disonnected',appState.users[userId].userName);
@@ -175,7 +180,7 @@ function gapiLoaded(){google_loaded=true;}
 				break;
 			case 'add':
 				addUser(value.user);
-				$('.chat-window .chat-message[data-user-id='+value.userId+'] .author').text(value.userName);
+				$('.chat-window .chat-message[data-user-id='+value.user.userId+'] .author').text(value.user.userName);
 				break;
 			case 'remove':
 				removeUser(value.userId);
@@ -229,8 +234,28 @@ function gapiLoaded(){google_loaded=true;}
 		if (appState.run_id && appState.run_id != data.run_id) socket.emit('resume',appState)
 		else appState.run_id=data.run_id;
 	});
+	socket.on('banned',function(data){
+		socket.close();
+		alert('You have been exiled. Have a "nice" day.');
+	});
+	socket.on('kicked',function(data) {
+		player.stopVideo();
+		$('.media-list').html('');
+		$('.chat-messages').html('');
+		$('.chat-members').html('');
+		socket.close();
+		alert('You have been ejected');
+	});
 	socket.on('restart',function(){
 		location=location.href;
+	});
+	socket.on('adminrefresh',function(data){
+		appState.admin=true;
+		var curcontrols = $('.admin-controls')
+		newcontrols = admincontrols({userId: appState.userId, users: $.extend({},appState.users), replace: curcontrols.length > 0});
+		curcontrols.length > 0  
+			? $('.admin-controls').replaceWith(newcontrols) 
+			: $('header').append(newcontrols);
 	});
 	socket.on('datainit',function(values){
 		appState.users=values.members;
@@ -250,7 +275,9 @@ function gapiLoaded(){google_loaded=true;}
 			chat_box_entry.val('');
 	});
 	$('.unlock').on('click',function(e){
-			socket.emit('userUnlock',prompt('Password please'));
+		var pw = prompt('Password please');
+		if (pw !== null)
+			socket.emit('userUnlock',pw);
 	});
 	$('.add-media').on('click',function(e) {
 		if ($('.media-adder').hasClass('open')) return;
@@ -324,6 +351,34 @@ function gapiLoaded(){google_loaded=true;}
 			player.setVolume(0);
 		}
 		
+	});
+	$('header').on('click','.admin-controls .js-admin-next', function(e) {
+		if (appState.admin) socket.emit('admin',{command:"skip"});
+	});
+	$('header').on('click','.admin-controls .js-admin-stop', function(e) {
+		if (appState.admin) socket.emit('admin',{command:"clear"});
+	});
+	$('header').on('click','.admin-controls .js-admin-users', function(e) {
+		if (appState.admin) {
+			var ulist = $('.admin-users-list');
+			$(".admin-users-list").toggleClass('open close');
+			if (ulist.hasClass('open')) ulist.css({display:"block"});
+			else {
+				ulist.on('animationend webkitAnimationEnd MSAnimationEnd',function(){ulist.hide();ulist.off('animationend webkitAnimationEnd MSAnimationEnd');});
+			}
+		}
+	});
+	$('header').on('click','.admin-controls .js-boot', function(e) {
+		var kickee = $(this).closest('.user').data('userId');
+		if (appState.admin && confirm('This will eject '+appState.users[kickee].userName)) {
+			socket.emit('admin',{command:'boot',userId: kickee});
+		}
+	});
+	$('header').on('click','.admin-controls .js-ban', function(e) {
+		var kickee = $(this).closest('.user').data('userId');
+		if (appState.admin && confirm('This will eject and exile '+appState.users[kickee].userName)) {
+			socket.emit('admin',{command:'ban',userId: kickee});
+		}
 	});
 	window.onYouTubeIframeAPIReady=function(){
 		
