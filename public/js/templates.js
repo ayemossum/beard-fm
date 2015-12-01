@@ -49,7 +49,7 @@ buf.push("</li>");
   }
 }).call(this);
 
-buf.push("</ul><div class=\"js-admin-users fa fa-users admin-control\"></div><div class=\"js-admin-next fa fa-step-forward admin-control\"></div><div class=\"js-admin-stop fa fa-stop admin-control\"></div></div>");}.call(this,"replace" in locals_for_with?locals_for_with.replace:typeof replace!=="undefined"?replace:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined,"userId" in locals_for_with?locals_for_with.userId:typeof userId!=="undefined"?userId:undefined,"users" in locals_for_with?locals_for_with.users:typeof users!=="undefined"?users:undefined));;return buf.join("");
+buf.push("</ul><div class=\"js-admin-users fa fa-users admin-control\"></div><div class=\"js-admin-next fa fa-step-forward admin-control\"></div><div class=\"js-admin-shuffle fa fa-random admin-control\"></div><div class=\"js-admin-stop fa fa-stop admin-control\"></div></div>");}.call(this,"replace" in locals_for_with?locals_for_with.replace:typeof replace!=="undefined"?replace:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined,"userId" in locals_for_with?locals_for_with.userId:typeof userId!=="undefined"?userId:undefined,"users" in locals_for_with?locals_for_with.users:typeof users!=="undefined"?users:undefined));;return buf.join("");
 }
 function chat(locals) {
 var buf = [];
@@ -128,7 +128,7 @@ function media(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (media, undefined) {
+;var locals_for_with = (locals || {});(function (media, undefined, userId, userIsAdmin) {
 buf.push("<div class=\"media-box\"><div id=\"player\" class=\"player\"></div><div class=\"controls\"><div class=\"control vote-down fa fa-chevron-down\"></div><div class=\"text\">vote</div><div class=\"control vote-up fa fa-chevron-up\"></div><div class=\"control volume\"><div class=\"muting fa fa-volume-up\"></div><input type=\"range\" min=\"0\" max=\"100\" value=\"90\"/></div></div></div><div class=\"media-list\">");
 if ( media)
 {
@@ -141,7 +141,13 @@ buf.push("<ol class=\"media-queue\">");
     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
       var item = $$obj[$index];
 
-buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + " class=\"media\">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+var canDelete = userIsAdmin || userId==item.userId
+buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
+if ( canDelete)
+{
+buf.push("<div class=\"delete fa fa-remove\"></div>");
+}
+buf.push("</li>");
     }
 
   } else {
@@ -149,7 +155,13 @@ buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.a
     for (var $index in $$obj) {
       $$l++;      var item = $$obj[$index];
 
-buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + " class=\"media\">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+var canDelete = userIsAdmin || userId==item.userId
+buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
+if ( canDelete)
+{
+buf.push("<div class=\"delete fa fa-remove\"></div>");
+}
+buf.push("</li>");
     }
 
   }
@@ -157,13 +169,13 @@ buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.a
 
 buf.push("</ol>");
 }
-buf.push("</div>");}.call(this,"media" in locals_for_with?locals_for_with.media:typeof media!=="undefined"?media:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
+buf.push("</div>");}.call(this,"media" in locals_for_with?locals_for_with.media:typeof media!=="undefined"?media:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined,"userId" in locals_for_with?locals_for_with.userId:typeof userId!=="undefined"?userId:undefined,"userIsAdmin" in locals_for_with?locals_for_with.userIsAdmin:typeof userIsAdmin!=="undefined"?userIsAdmin:undefined));;return buf.join("");
 }
 function medialist(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (media, undefined) {
+;var locals_for_with = (locals || {});(function (media, undefined, userId, userIsAdmin) {
 if ( media)
 {
 buf.push("<ol class=\"media-queue\">");
@@ -175,7 +187,13 @@ buf.push("<ol class=\"media-queue\">");
     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
       var item = $$obj[$index];
 
-buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + " class=\"media\">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+var canDelete = userIsAdmin || userId==item.userId
+buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
+if ( canDelete)
+{
+buf.push("<div class=\"delete fa fa-remove\"></div>");
+}
+buf.push("</li>");
     }
 
   } else {
@@ -183,14 +201,20 @@ buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.a
     for (var $index in $$obj) {
       $$l++;      var item = $$obj[$index];
 
-buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + " class=\"media\">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)) + "</li>");
+var canDelete = userIsAdmin || userId==item.userId
+buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
+if ( canDelete)
+{
+buf.push("<div class=\"delete fa fa-remove\"></div>");
+}
+buf.push("</li>");
     }
 
   }
 }).call(this);
 
 buf.push("</ol>");
-}}.call(this,"media" in locals_for_with?locals_for_with.media:typeof media!=="undefined"?media:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined));;return buf.join("");
+}}.call(this,"media" in locals_for_with?locals_for_with.media:typeof media!=="undefined"?media:undefined,"undefined" in locals_for_with?locals_for_with.undefined:typeof undefined!=="undefined"?undefined:undefined,"userId" in locals_for_with?locals_for_with.userId:typeof userId!=="undefined"?userId:undefined,"userIsAdmin" in locals_for_with?locals_for_with.userIsAdmin:typeof userIsAdmin!=="undefined"?userIsAdmin:undefined));;return buf.join("");
 }
 function register(locals) {
 var buf = [];

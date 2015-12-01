@@ -2443,9 +2443,14 @@ footer .powered-by {
     .media-window .media-list .media-item {
       margin: 5px; }
     .media-window .media-list .delete {
+      display: inline-block;
+      float: right;
+      cursor: pointer;
+      color: #909090; }
+      .media-window .media-list .delete:hover {
+        color: #a05050; }
+    .media-window .media-list .media-item:first-child .delete {
       display: none; }
-    .media-window .media-list.mine .delete {
-      display: block; }
     .media-window .media-list .media-queue:empty:after {
       content: "Add some videos";
       position: relative;

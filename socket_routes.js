@@ -75,6 +75,15 @@ module.exports = function(io,adminpass,run_id) {
 		io.sockets.emit('videoNext',media_queue[0]);
 		last_seen(this.userId);
 	}
+	function deleteMedia(data) {
+		for (var i = 1; i < media_queue.length; i++) {
+			if (media_queue[i].videoId==data.videoId) {
+				media_queue.splice(i,1);
+				io.emit('mediaRefresh',{media_queue:media_queue});
+				return;
+			}
+		}
+	}
 	function vote(data) {
 		if (!media_queue[0].votes) {
 			media_queue[0].votes = {'up':[],'down':[]};
@@ -85,7 +94,7 @@ module.exports = function(io,adminpass,run_id) {
 		}
 		if (media_queue[0].votes[data].indexOf(this.userId)>=0) return;
 		media_queue[0].votes[data].push(this.userId);
-		if (media_queue[0].votes.down.length - media_queue[0].votes.up.length >= 2) videoNext({previous: media_queue[0].videoId});
+		if ((media_queue[0].votes.down.length - media_queue[0].votes.up.length) >= 2) videoNext({previous: media_queue[0].videoId});
 		last_seen(this.userId);
 	}
 	function resume(data) {
@@ -122,6 +131,12 @@ module.exports = function(io,adminpass,run_id) {
 				delete all_sockets[data.userId];
 				disconnectUser({userId: data.userId});
 				break;
+			case 'shuffle':
+				for (var i = 0; i < media_queue.length; i++) {
+					media_queue[i].sortvalue = (i===0?0:Math.random());
+				}
+				media_queue.sort(function(a,b){return a.sortvalue-b.sortvalue});
+				io.emit('mediaRefresh',{media_queue:media_queue});
 		}
 		adminRefresh();
 	}
@@ -149,6 +164,7 @@ module.exports = function(io,adminpass,run_id) {
 		socket.on('disconnect',disconnectUser);
 		socket.on('getInit',getInit);
 		socket.on('videoNext',videoNext);
+		socket.on('delete',deleteMedia);
 		socket.on('vote',vote);
 		socket.on('resume',resume);
 		socket.on('disconnect',disconnectMe);

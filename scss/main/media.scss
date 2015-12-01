@@ -94,10 +94,16 @@
 		}
 		font-size: 1.2em;
 		.delete {
-			display: none;
+			display: inline-block;
+			float: right;
+			cursor: pointer;
+			color: color(close-color);
+			&:hover {
+				color: color(close-hover-color);
+			}
 		}
-		&.mine .delete {
-			display: block;
+		.media-item:first-child .delete {
+			display: none;
 		}
 		.media-queue:empty:after {
 			content: "Add some videos";

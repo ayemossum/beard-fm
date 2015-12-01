@@ -96,6 +96,7 @@ function gapiLoaded(){google_loaded=true;}
 		console.log("%s is now admin",appState.userName);
 		appState.admin=true;
 		$('header').append(admincontrols({userId: appState.userId, users: $.extend({},appState.users)}));
+		$('.media-list').html(medialist({userIsAdmin: appState.admin, userId: appState.userId, media: appState.media_queue}));
 	}
 	function leaveAdmin() {
 		appState.admin=false;
@@ -196,6 +197,7 @@ function gapiLoaded(){google_loaded=true;}
 	});
 	socket.on('media',function(value) {
 		var media_data = typeof value === 'string' ? JSON.parse(value) : value;
+		media_data.userIsAdmin = appState.admin;
 		$('.media-list').html(medialist(media_data));
 		if (media_data.length>0) {
 			player.playVideo(media_data[0].videoId,media_data[0].time);
@@ -205,7 +207,7 @@ function gapiLoaded(){google_loaded=true;}
 	});
 	socket.on('addMedia',function(value) {
 		appState.media_queue.push(value);
-		$('.media-list').html(medialist({userId: appState.userId, media: appState.media_queue}));
+		$('.media-list').html(medialist({userIsAdmin: appState.admin, userId: appState.userId, media: appState.media_queue}));
 		if (player.getPlayerState() !== YT.PlayerState.PLAYING) playVideo(appState.media_queue[0].videoId);
 	});
 	socket.on('videoNext',function(value) {
@@ -217,7 +219,7 @@ function gapiLoaded(){google_loaded=true;}
 				if (v.videoId==value.videoId) {
 					appState.media_queue = appState.media_queue.slice(i);
 					playVideo(appState.media_queue[0].videoId,appState.media_queue[0].seek);
-					$('.media-list').html(medialist({userId: appState.userId, media: appState.media_queue}));
+					$('.media-list').html(medialist({userIsAdmin: appState.admin, userId: appState.userId, media: appState.media_queue}));
 					played=true;
 					return false;
 				}
@@ -229,6 +231,10 @@ function gapiLoaded(){google_loaded=true;}
 			player.clearVideo();
 			appState.media_queue=[];
 		}
+	});
+	socket.on('mediaRefresh',function(value) {
+		appState.media_queue=value.media_queue;
+		$('.media-list').html(medialist({userIsAdmin: appState.admin, userId: appState.userId, media: appState.media_queue}));
 	});
 	socket.on('connected',function(data){
 		if (appState.run_id && appState.run_id != data.run_id) socket.emit('resume',appState)
@@ -352,11 +358,18 @@ function gapiLoaded(){google_loaded=true;}
 		}
 		
 	});
+	$('.media-window').on('click','.media-item .delete',function(e){
+		var mediaItem = $(this).closest('.media-item');
+		socket.emit('delete',{videoId: mediaItem.data('videoId')});
+	})
 	$('header').on('click','.admin-controls .js-admin-next', function(e) {
 		if (appState.admin) socket.emit('admin',{command:"skip"});
 	});
 	$('header').on('click','.admin-controls .js-admin-stop', function(e) {
-		if (appState.admin) socket.emit('admin',{command:"clear"});
+		if (appState.admin && confirm('Stop player and clear all media?')) socket.emit('admin',{command:"clear"});
+	});
+	$('header').on('click','.admin-controls .js-admin-shuffle',function(e) {
+		if (appState.admin && confirm('Shuffle?')) socket.emit('admin',{command:'shuffle'});
 	});
 	$('header').on('click','.admin-controls .js-admin-users', function(e) {
 		if (appState.admin) {
