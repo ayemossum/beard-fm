@@ -7,12 +7,15 @@ var previous_video = '';
 var shortid = require('shortid');
 var sanitizer = require('sanitizer');
 var can_resume = true;
+var all_sockets = {};
+var banned = {};
 
 module.exports = function(io,adminpass,run_id) {
 	function userUnlock(data){
-		console.log('userUnlock');
+		admin_users.push(this.userId);
 		this.emit('user',{action: data===adminpass ? 'admin' : 'noadmin'});
 		last_seen(this.userId);
+		adminRefresh(this.userId);
 	};
 	function chat(data){
 		var message = {authorId: this.userId, message: sanitizer.sanitize(data.message)};
@@ -27,12 +30,19 @@ module.exports = function(io,adminpass,run_id) {
 	function register(data){
 		eventName = this.userId ? 'rename' : 'connected';
 		if (!data.userId) data.userId = shortid.generate();
+		if (banned[data.userId]) {
+			this.emit('banned');
+			this.conn.close();
+			disconnectUser({userId:data.userId});
+		}
 		connected_users[data.userId]=data; 
 		this.userId=data.userId;
+		all_sockets[this.userId]=this;
 		data.userName=sanitizer.sanitize(data.userName);
 		last_seen(this.userId);
 		io.sockets.emit('user',{action:'add',user:{userId:data.userId,userName:data.userName,disconnected: false}});
 		this.emit('user',{action:eventName,userId:data.userId,userName:data.userName,disconnected: false});
+		adminRefresh();
 	}
 	function disconnectUser(data) {
 		//delete connected_users[this.userId];
@@ -41,9 +51,10 @@ module.exports = function(io,adminpass,run_id) {
 		if (!connected_users || !connected_users[userId]) return;
 		connected_users[userId].disconnected=true;
 		io.sockets.emit('user',{action:'remove',userId: userId}); 
+		adminRefresh();
 	}
 	function disconnectMe() {
-		disconnectUser(this.userId);
+		disconnectUser({userId: this.userId});
 	}
 	function getInit() {
 		this.emit('datainit',{members: connected_users, media: media_queue, messages: chat_messages.slice(-30)});
@@ -91,6 +102,36 @@ module.exports = function(io,adminpass,run_id) {
 		chat_messages = data.chat_messages;
 		this.emit('restart');
 	}
+	function admin(data) {
+		if (admin_users.indexOf(this.userId)<0) {
+			socket.emit('noadmin');
+			socket.conn.close();
+			return;
+		}
+		switch (data.command) {
+			case 'clear':
+				media_queue=[];
+			case 'skip':
+				videoNext({});
+				break;
+			case 'ban':
+				banned[data.userId]=connected_users[data.userId].userName;
+			case 'boot':
+				all_sockets[data.userId].emit('kicked',{});
+				all_sockets[data.userId].conn.close();
+				delete all_sockets[data.userId];
+				disconnectUser({userId: data.userId});
+				break;
+		}
+		adminRefresh();
+	}
+	
+	function adminRefresh(except) {
+		for (var i = 0; i < admin_users; i++) {
+			if (admin_users[i] === except) continue;
+			all_sockets[admin_users[i]].emit('adminrefresh',{admins: admin_users});
+		}
+	}
 	
 	function last_seen(id) {
 		if (connected_users[id]) {
@@ -111,6 +152,7 @@ module.exports = function(io,adminpass,run_id) {
 		socket.on('vote',vote);
 		socket.on('resume',resume);
 		socket.on('disconnect',disconnectMe);
+		socket.on('admin',admin);
 	});
 	
 	
