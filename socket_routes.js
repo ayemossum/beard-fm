@@ -153,6 +153,9 @@ module.exports = function(io,adminpass,run_id) {
 			connected_users[id].last_seen = (new Date()).getTime();
 		}
 	}
+	function pong() {
+		last_seen(this.userId);
+	}
 	
 	io.sockets.on('connect',function(socket) {
 		socket.emit("connected",{run_id: run_id});
@@ -169,6 +172,7 @@ module.exports = function(io,adminpass,run_id) {
 		socket.on('resume',resume);
 		socket.on('disconnect',disconnectMe);
 		socket.on('admin',admin);
+		socket.on('pong',pong);
 	});
 	
 	
@@ -186,5 +190,8 @@ module.exports = function(io,adminpass,run_id) {
 			media_queue[0].seek++;
 		}
 	},1000);
+	setInterval(function(){
+		io.emit('ping');
+	},200000);
 };
 
