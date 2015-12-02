@@ -94,12 +94,13 @@ function gapiLoaded(){google_loaded=true;}
 		}
 	}
 	function playerStateChange(e) {
-		console.log(e.data);
 		if (e.data===YT.PlayerState.ENDED) {
 			socket.emit('videoNext',{previous: player.getVideoData().video_id});
 		}
 		if (!appState.has_played && e.data===YT.PlayerState.PLAYING) {
-			$('.media-box .controls').css('display',null);
+			$('.media-box .controls').css('display','');
+			appState.has_played=true;
+			playVideo(appState.media_queue[0].videoId,appState.media_queue[0].seek);
 		}
 	}
 	function playerStartup() {
