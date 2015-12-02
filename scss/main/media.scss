@@ -1,6 +1,11 @@
+@import "_breakpoint";
+
 .media-window {
 	position: relative;
-	height: 100%;
+	height: 50%;
+	@include breakpoint(700px) {
+		height: 100%;
+	}
 	background-color: color(media-background);
 	color: color(media-color);
 	
@@ -137,6 +142,9 @@
 
 .media-adder {
 	z-index: 200;
+	position:absolute;
+	top:0;
+	left:0;
 	height: 100%;
 	padding: 30px 30px 10px 10px;
 	transform: translateX(-120%);

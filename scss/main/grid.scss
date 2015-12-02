@@ -6,25 +6,25 @@
 @include add-gutter(0px);
 
 .chat-window {
-	@include grid-span(1);
+	@include grid-span(1,1,1);
 	@include breakpoint(700px) {
 		@include grid-span(1,1);
 	}
 }
 .media-window {
-	@include grid-span(1);
+	@include grid-span(1,1,1);
 	@include breakpoint(700px) {
-		@include grid-span(1,2);
+		@include grid-span(1,2,4 3);
 	}
 }
 .register-window {
-	@include grid-span(1);
+	@include grid-span(1,1,1);
 }
 
 .media-adder {
 	position: relative;
-	@include grid-span(1);
+	@include grid-span(1,1,1);
 	@include breakpoint(700px) {
-		@include grid-span(1,1);
+		@include grid-span(1,1,4 3);
 	}
 }

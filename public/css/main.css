@@ -2371,6 +2371,11 @@ h1 {
 
 header {
   background-color: #108010;
+  background-image: url("/img/majesty.jpg");
+  background-repeat: no-repeat;
+  background-size: auto 70px;
+  padding-left: 80px;
+  background-position: center left;
   color: #e0e0e0;
   font-family: "Titillium Web", sans-serif;
   font-weight: bold;
@@ -2422,7 +2427,10 @@ footer .powered-by {
 
 .chat-window {
   position: relative;
-  height: 100%; }
+  height: 50%; }
+  @media (min-width: 700px) {
+    .chat-window {
+      height: 100%; } }
   .chat-window .chat-members {
     height: 30px;
     width: 100%;
@@ -2538,9 +2546,12 @@ footer .powered-by {
 
 .media-window {
   position: relative;
-  height: 100%;
+  height: 50%;
   background-color: #082008;
   color: #909090; }
+  @media (min-width: 700px) {
+    .media-window {
+      height: 100%; } }
   .media-window .media-box {
     position: relative; }
     .media-window .media-box .player {
@@ -2647,6 +2658,9 @@ footer .powered-by {
 
 .media-adder {
   z-index: 200;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   padding: 30px 30px 10px 10px;
   -webkit-transform: translateX(-120%);
