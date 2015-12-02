@@ -186,12 +186,17 @@ function gapiLoaded(){google_loaded=true;}
 			case 'remove':
 				removeUser(value.userId);
 				break;
+			case 'duplicate':
+				alert('Duplicate user name. Please try again.');
+				break;
 			case 'admin':
 				becomeAdmin();
 				break;
 			case 'noadmin':
-				appState.admin=false;
 				alert('BAD user. BAD. Go sit in the corner');
+			case 'deadmin':
+				$('header .admin-controls').remove();
+				appState.admin=false;
 				break;
 		}
 	});
@@ -271,6 +276,9 @@ function gapiLoaded(){google_loaded=true;}
 		$('.media-list').html(medialist({userId: appState.userId, media: appState.media_queue}));
 		appState.chat_messages = values.messages;
 		$.each(values.messages, function(i,message) {message.users = appState.users; message.message = urlify(message.message); $('.chat-messages .chat-table').append(chatmessage(message)); $('.chat-messages').prop('scrollTop',$('.chat-messages .chat-table').height());});
+	});
+	socket.on('ping',function(){
+		socket.emit('pong');
 	});
 	chat_box_entry.on('keypress',(e) => {
 		if (e.which==13) {
@@ -392,6 +400,32 @@ function gapiLoaded(){google_loaded=true;}
 		var kickee = $(this).closest('.user').data('userId');
 		if (appState.admin && confirm('This will eject and exile '+appState.users[kickee].userName)) {
 			socket.emit('admin',{command:'ban',userId: kickee});
+		}
+	});
+	$('header').on('click','.admin-controls .js-adminify', function(e) {
+		var targetUserId = $(this).closest('.user').data('userId');
+		if (appState.admin && confirm('Grant admin rights to '+appState.users[targetUserId].userName+'?')) {
+			socket.emit('admin',{command:'adminify',userId: targetUserId});
+		}
+	});
+	$('header').on('click','.admin-controls .js-disadminify', function(e) {
+		var targetUserId = $(this).closest('.user').data('userId');
+		if (appState.admin && confirm('Remove admin rights from '+appState.users[targetUserId].userName+'?')) {
+			socket.emit('admin',{command:'disadminify',userId: targetUserId});
+		}
+	});
+	$('header').on('click','.admin-controls .js-rename', function(e) {
+		var renamee = $(this).closest('.user').data('userId');
+		if (appState.admin){
+			var newname = prompt('Enter new name for '+appState.users[renamee].userName);
+			if (confirm('This will rename '+appState.users[renamee].userName+' to '+newname)) {
+				socket.emit('admin',{command:'rename',userId: renamee,userName: newname});
+			}
+		}
+	});
+	$('body').on('click',function(e){
+		if (!$(e.target).is('.js-admin-users') && $(e.target).closest('.js-admin-users').length==0 && $(e.target).closest('.admin-users-list').length==0 && $('.admin-users-list').hasClass('open')) {
+			$('.admin-users-list').removeClass('open').addClass('close');
 		}
 	});
 	window.onYouTubeIframeAPIReady=function(){
