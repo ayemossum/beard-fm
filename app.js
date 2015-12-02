@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 	res.render('index', { title: defaults.title, run_id: run_id } );
 });
 app.get('/ping', function(req,res){
-	res.body('pong').end();
+	res.send('pong').end();
 });
 
 var server = require('http').Server(app);
