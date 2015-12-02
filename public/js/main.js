@@ -30,11 +30,21 @@ function gapiLoaded(){google_loaded=true;}
 	window.__appState=appState;
 	function notify (msgtype, msg) {
 		if (!appState.notifications_allowed || !msgtype || (document.hasFocus && document.hasFocus())) return;
-		var notification = new Notification(msgtype,{body:msg});
-		notification.onclick=function(){
-			notification.close();
+		if (ServiceWorkerRegistration && ServiceWorkerRegistration.showNotification) {
+			ServiceWorkerRegistration.showNotification(msgtype,{body:msg}).then(function(notificationEvent){
+				var notification = notificationEvent.notification;
+				notification.onclick=function(){
+					notification.close();
+				}
+				setTimeout(function(){notification.close()},5000);
+			});
+		} else {
+			var notification = new Notification(msgtype,{body:msg});
+			notification.onclick=function(){
+				notification.close();
+			}
+			setTimeout(function(){notification.close()},5000);
 		}
-		setTimeout(function(){notification.close()},5000);
 		
 	}
 	function findUrls( text )
