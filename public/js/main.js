@@ -209,7 +209,7 @@ function gapiLoaded(){google_loaded=true;}
 		media_data.userIsAdmin = appState.admin;
 		$('.media-list').html(medialist(media_data));
 		if (media_data.length>0) {
-			player.playVideo(media_data[0].videoId,media_data[0].time);
+			playVideo(media_data[0].videoId,media_data[0].time);
 			if (media_data[0].mine) $('.media-box .controls').addClass('mine');
 			else $('.media-box .controls').removeClass('mine');
 		}
