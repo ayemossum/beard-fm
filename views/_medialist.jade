@@ -1,7 +1,6 @@
 if media
 	ol.media-queue
 		each item in media
-			- var canDelete = userIsAdmin || userId==item.userId
 			li.media-item(data-user-id=item.userId,data-video-id=item.videoId,class=item.userId==userId ? 'mine' : '')= item.title
-				if canDelete
-					.delete.fa.fa-remove
+				if userIsAdmin || item.userId == userId
+					.fa.fa-remove.delete
