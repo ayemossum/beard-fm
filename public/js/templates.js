@@ -105,7 +105,7 @@ function chatmessage(locals) {
 var buf = [];
 var jade_mixins = {};
 var jade_interp;
-;var locals_for_with = (locals || {});(function (authorId, message, ts, users) {
+;var locals_for_with = (locals || {});(function (Date, authorId, message, ts, users) {
 buf.push("<div" + (jade.attr("data-user-id", authorId, true, false)) + (jade.cls(['chat-message',users[authorId].disconnected ? 'disconnected' : ''], [null,true])) + ">");
 if ( message.substr(0,3)=='/me')
 {
@@ -113,9 +113,18 @@ buf.push("<div class=\"td\"></div><div class=\"td\"><div class=\"message-text me
 }
 else
 {
-buf.push("<div class=\"td username\"><div class=\"author\">" + (jade.escape(null == (jade_interp = users[authorId].userName) ? "" : jade_interp)) + "</div></div><div class=\"td\"><div class=\"message-text\">" + (((jade_interp = message) == null ? '' : jade_interp)) + "</div></div>");
+buf.push("<div class=\"td username\"><div class=\"author\">" + (jade.escape(null == (jade_interp = users[authorId].userName) ? "" : jade_interp)) + "</div></div><div class=\"td\"><div class=\"message-text\">" + (((jade_interp = message) == null ? '' : jade_interp)) + "\t</div></div>");
 }
-buf.push("<div class=\"td ts\">" + (jade.escape(null == (jade_interp = ts) ? "" : jade_interp)) + "</div></div>");}.call(this,"authorId" in locals_for_with?locals_for_with.authorId:typeof authorId!=="undefined"?authorId:undefined,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined,"ts" in locals_for_with?locals_for_with.ts:typeof ts!=="undefined"?ts:undefined,"users" in locals_for_with?locals_for_with.users:typeof users!=="undefined"?users:undefined));;return buf.join("");
+if ( ts)
+{
+var d = new Date(ts)
+buf.push("<div class=\"td ts\">" + (jade.escape(null == (jade_interp = (d.getHours() < 10 ? '0' : '')+d.getHours()+':'+(d.getMinutes()<10 ? '0' : '')+d.getMinutes()+':'+(d.getSeconds()<10 ? '0' : '')+d.getSeconds()) ? "" : jade_interp)) + "</div>");
+}
+else
+{
+buf.push("<div class=\"td ts\"></div>");
+}
+buf.push("</div>");}.call(this,"Date" in locals_for_with?locals_for_with.Date:typeof Date!=="undefined"?Date:undefined,"authorId" in locals_for_with?locals_for_with.authorId:typeof authorId!=="undefined"?authorId:undefined,"message" in locals_for_with?locals_for_with.message:typeof message!=="undefined"?message:undefined,"ts" in locals_for_with?locals_for_with.ts:typeof ts!=="undefined"?ts:undefined,"users" in locals_for_with?locals_for_with.users:typeof users!=="undefined"?users:undefined));;return buf.join("");
 }
 function footer(locals) {
 var buf = [];
@@ -141,11 +150,10 @@ buf.push("<ol class=\"media-queue\">");
     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
       var item = $$obj[$index];
 
-var canDelete = userIsAdmin || userId==item.userId
 buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
-if ( canDelete)
+if ( userIsAdmin || item.userId == userId)
 {
-buf.push("<div class=\"delete fa fa-remove\"></div>");
+buf.push("<div class=\"fa fa-remove delete\"></div>");
 }
 buf.push("</li>");
     }
@@ -155,11 +163,10 @@ buf.push("</li>");
     for (var $index in $$obj) {
       $$l++;      var item = $$obj[$index];
 
-var canDelete = userIsAdmin || userId==item.userId
 buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
-if ( canDelete)
+if ( userIsAdmin || item.userId == userId)
 {
-buf.push("<div class=\"delete fa fa-remove\"></div>");
+buf.push("<div class=\"fa fa-remove delete\"></div>");
 }
 buf.push("</li>");
     }
@@ -187,11 +194,10 @@ buf.push("<ol class=\"media-queue\">");
     for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
       var item = $$obj[$index];
 
-var canDelete = userIsAdmin || userId==item.userId
 buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
-if ( canDelete)
+if ( userIsAdmin || item.userId == userId)
 {
-buf.push("<div class=\"delete fa fa-remove\"></div>");
+buf.push("<div class=\"fa fa-remove delete\"></div>");
 }
 buf.push("</li>");
     }
@@ -201,11 +207,10 @@ buf.push("</li>");
     for (var $index in $$obj) {
       $$l++;      var item = $$obj[$index];
 
-var canDelete = userIsAdmin || userId==item.userId
 buf.push("<li" + (jade.attr("data-user-id", item.userId, true, false)) + (jade.attr("data-video-id", item.videoId, true, false)) + (jade.cls(['media-item',item.userId==userId ? 'mine' : ''], [null,true])) + ">" + (jade.escape(null == (jade_interp = item.title) ? "" : jade_interp)));
-if ( canDelete)
+if ( userIsAdmin || item.userId == userId)
 {
-buf.push("<div class=\"delete fa fa-remove\"></div>");
+buf.push("<div class=\"fa fa-remove delete\"></div>");
 }
 buf.push("</li>");
     }

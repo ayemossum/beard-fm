@@ -9,5 +9,9 @@
 		.td.username
 			.author= users[authorId].userName
 		.td
-			.message-text !{message}
-	.td.ts= ts
+			.message-text !{message}	
+	if ts
+		- var d = new Date(ts)
+		.td.ts= (d.getHours() < 10 ? '0' : '')+d.getHours()+':'+(d.getMinutes()<10 ? '0' : '')+d.getMinutes()+':'+(d.getSeconds()<10 ? '0' : '')+d.getSeconds()
+	else
+		.td.ts
