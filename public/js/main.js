@@ -111,7 +111,7 @@ function gapiLoaded(){google_loaded=true;}
 		if (time) {
 			player.seekTo(time);
 		}
-		if (appState.hasPlayed) player.playVideo();
+		if (appState.has_played) player.playVideo();
 		
 		if (appState.media_queue[0].userId == appState.userId) $('.media-box .controls').addClass('mine');
 		else $('.media-box .controls').removeClass('mine');
