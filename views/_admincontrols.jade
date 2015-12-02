@@ -9,8 +9,10 @@
 						.tooltip
 							.js-boot.fa.fa-user-times
 							.js-rename.fa.fa-edit
-							.js-adminify.fa.fa-unlock
-							.js-disadminify.fa.fa-lock
+							if user.admin
+								.js-disadminify.fa.fa-lock
+							else 
+								.js-adminify.fa.fa-unlock
 							.js-ban.fa.fa-unlink
 	.js-admin-users.fa.fa-users.admin-control
 	.js-admin-next.fa.fa-step-forward.admin-control

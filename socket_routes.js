@@ -153,7 +153,12 @@ module.exports = function(io,adminpass,run_id) {
 				all_sockets[data.userId].emit('user',{action:'admin'});
 				break;
 			case 'disadminify':
-				admin_users.push(data.userId);
+				for (var i = 0; i < admin_users.length; i++) {
+					if (admin_users[i]==data.userId) {
+						admin_users.splice(i,1);
+						break;
+					}
+				}
 				all_sockets[data.userId].emit('user',{action:'deadmin'});
 				break;
 			case 'rename':
@@ -166,7 +171,7 @@ module.exports = function(io,adminpass,run_id) {
 	}
 	
 	function adminRefresh(except) {
-		for (var i = 0; i < admin_users; i++) {
+		for (var i = 0; i < admin_users.length; i++) {
 			if (admin_users[i] === except) continue;
 			all_sockets[admin_users[i]].emit('adminrefresh',{admins: admin_users});
 		}

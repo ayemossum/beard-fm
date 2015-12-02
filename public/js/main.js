@@ -263,8 +263,15 @@ function gapiLoaded(){google_loaded=true;}
 	});
 	socket.on('adminrefresh',function(data){
 		appState.admin=true;
-		var curcontrols = $('.admin-controls')
-		newcontrols = admincontrols({userId: appState.userId, users: $.extend({},appState.users), replace: curcontrols.length > 0});
+		var curcontrols = $('.admin-controls');
+		var users = $.extend({},appState.users);
+		console.log(data);
+		for (var i = 0; i < data.admins.length; i++) {
+			console.log(data.admins[i]);
+			console.log(users[data.admins[i]]);
+			users[data.admins[i]].admin=true;
+		}
+		newcontrols = admincontrols({userId: appState.userId, users: users, replace: curcontrols.length > 0});
 		curcontrols.length > 0  
 			? $('.admin-controls').replaceWith(newcontrols) 
 			: $('header').append(newcontrols);

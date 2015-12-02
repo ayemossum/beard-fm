@@ -24,7 +24,16 @@ if ( !user.disconnected)
 buf.push("<li" + (jade.attr("data-user-id", user.userId, true, false)) + " class=\"user\">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)));
 if ( user.userId != userId)
 {
-buf.push("<div class=\"caret fa fa-caret-right\"></div><div class=\"tooltip\"><div class=\"js-boot fa fa-user-times\"></div><div class=\"js-rename fa fa-edit\"></div><div class=\"js-adminify fa fa-unlock\"></div><div class=\"js-disadminify fa fa-lock\"></div><div class=\"js-ban fa fa-unlink\"></div></div>");
+buf.push("<div class=\"caret fa fa-caret-right\"></div><div class=\"tooltip\"><div class=\"js-boot fa fa-user-times\"></div><div class=\"js-rename fa fa-edit\"></div>");
+if ( user.admin)
+{
+buf.push("<div class=\"js-disadminify fa fa-lock\"></div>");
+}
+else
+{
+buf.push("<div class=\"js-adminify fa fa-unlock\"></div>");
+}
+buf.push("<div class=\"js-ban fa fa-unlink\"></div></div>");
 }
 buf.push("</li>");
 }
@@ -40,7 +49,16 @@ if ( !user.disconnected)
 buf.push("<li" + (jade.attr("data-user-id", user.userId, true, false)) + " class=\"user\">" + (jade.escape(null == (jade_interp = user.userName) ? "" : jade_interp)));
 if ( user.userId != userId)
 {
-buf.push("<div class=\"caret fa fa-caret-right\"></div><div class=\"tooltip\"><div class=\"js-boot fa fa-user-times\"></div><div class=\"js-rename fa fa-edit\"></div><div class=\"js-adminify fa fa-unlock\"></div><div class=\"js-disadminify fa fa-lock\"></div><div class=\"js-ban fa fa-unlink\"></div></div>");
+buf.push("<div class=\"caret fa fa-caret-right\"></div><div class=\"tooltip\"><div class=\"js-boot fa fa-user-times\"></div><div class=\"js-rename fa fa-edit\"></div>");
+if ( user.admin)
+{
+buf.push("<div class=\"js-disadminify fa fa-lock\"></div>");
+}
+else
+{
+buf.push("<div class=\"js-adminify fa fa-unlock\"></div>");
+}
+buf.push("<div class=\"js-ban fa fa-unlink\"></div></div>");
 }
 buf.push("</li>");
 }
