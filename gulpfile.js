@@ -7,6 +7,7 @@ var jade = require('gulp-jade');
 var concat = require('gulp-concat');
 var foreach = require('gulp-foreach');
 var path = require('path');
+var autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('start', function () {
   nodemon({
@@ -19,6 +20,7 @@ gulp.task('start', function () {
 gulp.task('sass', function () {
   gulp.src('scss/*.scss')
     .pipe(sass({includePaths: ["./node_modules/singularitygs/stylesheets/","./node_modules/breakpoint-sass/stylesheets/"]}).on('error',sass.logError))
+	.pipe(autoprefixer(['last 2 versions']))
     .pipe(gulp.dest('./public/css'));
 });
 
