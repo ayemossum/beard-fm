@@ -133,36 +133,12 @@
 }
 @keyframes wiggle {
 	0% {
-		transform: rotate(1deg);
-	}
-	10% {
-		transform: rotate(-1deg);
-	}
-	20% {
-		transform: rotate(1deg);
-	}
-	30% {
-		transform: rotate(-1deg);
-	}
-	40% {
-		transform: rotate(1deg);
+		transform: rotateZ(1deg);
 	}
 	50% {
-		transform: rotate(-1deg);
-	}
-	60% {
-		transform: rotate(1deg);
-	}
-	70% {
-		transform: rotate(-1deg);
-	}
-	80% {
-		transform: rotate(1deg);
-	}
-	90% {
-		transform: rotate(-1deg);
+		transform: rotateZ(-1deg);
 	}
 	100% {
-		transform: rotate(1deg);
+		transform: rotateZ(1deg);
 	}
 }

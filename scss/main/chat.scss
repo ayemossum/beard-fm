@@ -36,9 +36,12 @@
 			display: table;
 			width: 100%;
 			border-collapse: collapse;
-			&:empty:after {
-				content: "Type something";
-				animation: wiggle 4s infinite;
+			&:empty {
+				transform-origin: 4em 50% 0px;
+				animation: .4s infinite wiggle;
+				&:after {
+					content: "Type something";
+				}
 			}
 			.chat-message {
 				display: table-row;
@@ -71,6 +74,11 @@
 							display: inline-block;
 							max-width: 100%;
 						}
+					}
+					&.ts {
+						font-size: 0.4em;
+						color: color(text-subdued);
+						width: 5em;
 					}
 				}
 			}

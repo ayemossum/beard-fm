@@ -44,7 +44,7 @@
 				transform: translateZ(100px);
 				transition-property: transform, color;
 				transition-duration: 0.5s, 0.4s;
-				transition-delay: 0.1s 0s;
+				transition-delay: 0.1s, 0s;
 				opacity: 0;
 			}
 			.text {
@@ -70,7 +70,7 @@
 				.control {
 					opacity: 0.5;
 					transform: translateZ(-10px);
-					transition-delay: 0;
+					transition-delay: 0s;
 					&:hover {
 						opacity: 1;
 						transform: none;
@@ -105,11 +105,14 @@
 		.media-item:first-child .delete {
 			display: none;
 		}
-		.media-queue:empty:after {
-			content: "Add some videos";
+		.media-queue:empty {
 			position: relative;
 			top: 30px;
-			animation: wiggle 4s infinite;
+			animation: .4s infinite wiggle;
+			transform-origin: 5em 50% 0px;
+			&:after {
+				content: "Add some videos";
+			}
 		}
 	}
 }
