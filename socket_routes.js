@@ -38,7 +38,6 @@ module.exports = function(io,adminpass,run_id) {
 		}
 		for (uid in connected_users) {
 			if (!connected_users[uid].disconnected && connected_users[uid].userName.trim().toLowerCase()==data.userName.trim().toLowerCase()) {
-				console.log(connected_users[uid]);
 				this.emit('user',{action:'duplicate'});
 				return;
 			}
@@ -54,7 +53,6 @@ module.exports = function(io,adminpass,run_id) {
 	}
 	function disconnectUser(data) {
 		//delete connected_users[this.userId];
-		console.log('disconnect %s',data.userId);
 		if (!data) return;
 		var userId = data.userId ? data.userId : data;
 		if (!connected_users || !connected_users[userId]) return;
@@ -63,7 +61,6 @@ module.exports = function(io,adminpass,run_id) {
 		adminRefresh();
 	}
 	function disconnectMe() {
-		console.log('disconnect me, %s',this.userId);
 		disconnectUser({userId: this.userId});
 	}
 	function getInit() {
