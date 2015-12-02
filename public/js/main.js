@@ -94,6 +94,7 @@ function gapiLoaded(){google_loaded=true;}
 		}
 	}
 	function playerStateChange(e) {
+		console.log(e.data);
 		if (e.data===YT.PlayerState.ENDED) {
 			socket.emit('videoNext',{previous: player.getVideoData().video_id});
 		}
