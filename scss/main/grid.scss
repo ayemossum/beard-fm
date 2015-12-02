@@ -2,18 +2,18 @@
 @import "_singularitygs";
 
 @include add-grid(1);
-@include add-grid(4 3 at 700px);
+@include add-grid(4 3 at 800px);
 @include add-gutter(0px);
 
 .chat-window {
 	@include grid-span(1,1,1);
-	@include breakpoint(700px) {
+	@include breakpoint(800px) {
 		@include grid-span(1,1);
 	}
 }
 .media-window {
 	@include grid-span(1,1,1);
-	@include breakpoint(700px) {
+	@include breakpoint(800px) {
 		@include grid-span(1,2,4 3);
 	}
 }
@@ -24,7 +24,7 @@
 .media-adder {
 	position: relative;
 	@include grid-span(1,1,1);
-	@include breakpoint(700px) {
+	@include breakpoint(800px) {
 		@include grid-span(1,1,4 3);
 	}
 }

@@ -2,8 +2,8 @@
 
 .media-window {
 	position: relative;
-	height: 50%;
-	@include breakpoint(700px) {
+	height: 70%;
+	@include breakpoint(800px) {
 		height: 100%;
 	}
 	background-color: color(media-background);

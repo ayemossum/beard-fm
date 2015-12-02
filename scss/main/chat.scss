@@ -2,8 +2,8 @@
 
 .chat-window {
 	position: relative;
-	height: 50%;
-	@include breakpoint(700px) {
+	height: 30%;
+	@include breakpoint(800px) {
 		height: 100%;
 	}
 	.chat-members {

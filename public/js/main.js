@@ -324,7 +324,7 @@ function gapiLoaded(){google_loaded=true;}
 			search_value.pageToken=data.nextPageToken;
 			request = gapi.client.youtube.search.list(search_value);
 			request.execute(function(data2){
-				data.items.concat(data2.items);
+				data.items = data.items.concat(data2.items);
 				$('.media-adder .resultsbox').html(searchresults(data));
 			});
 		})

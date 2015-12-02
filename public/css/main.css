@@ -2027,7 +2027,7 @@
   margin-right: 0;
   clear: none;
   padding-right: 0; }
-  @media (min-width: 700px) {
+  @media (min-width: 800px) {
     .chat-window {
       width: 57.14286%;
       float: left;
@@ -2042,7 +2042,7 @@
   margin-right: 0;
   clear: none;
   padding-right: 0; }
-  @media (min-width: 700px) {
+  @media (min-width: 800px) {
     .media-window {
       width: 42.85714%;
       float: right;
@@ -2067,7 +2067,7 @@
   margin-right: 0;
   clear: none;
   padding-right: 0; }
-  @media (min-width: 700px) {
+  @media (min-width: 800px) {
     .media-adder {
       width: 57.14286%;
       float: left;
@@ -2427,8 +2427,8 @@ footer .powered-by {
 
 .chat-window {
   position: relative;
-  height: 50%; }
-  @media (min-width: 700px) {
+  height: 30%; }
+  @media (min-width: 800px) {
     .chat-window {
       height: 100%; } }
   .chat-window .chat-members {
@@ -2546,10 +2546,10 @@ footer .powered-by {
 
 .media-window {
   position: relative;
-  height: 50%;
+  height: 70%;
   background-color: #082008;
   color: #909090; }
-  @media (min-width: 700px) {
+  @media (min-width: 800px) {
     .media-window {
       height: 100%; } }
   .media-window .media-box {
