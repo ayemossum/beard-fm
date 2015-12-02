@@ -18,7 +18,8 @@ function gapiLoaded(){google_loaded=true;}
 		media_queue: [],
 		notifications_allowed: false,
 		run_id: null,
-		chat_messages: []
+		chat_messages: [],
+		has_played: true
 	};
 	if ("Notification" in window) {
 		if (Notification.permission === 'granted') appState.notifications_allowed=true;
@@ -86,6 +87,9 @@ function gapiLoaded(){google_loaded=true;}
 		if (e.data===YT.PlayerState.ENDED) {
 			socket.emit('videoNext',{previous: player.getVideoData().video_id});
 		}
+		if (!appState.has_played && e.data===YT.PlayerState.PLAYING) {
+			$('.media-box .controls').css('display',null);
+		}
 	}
 	function playerStartup() {
 		$('.controls .volume input').val(player.getVolume());
@@ -107,7 +111,7 @@ function gapiLoaded(){google_loaded=true;}
 		if (time) {
 			player.seekTo(time);
 		}
-		player.playVideo();
+		if (appState.hasPlayed) player.playVideo();
 		
 		if (appState.media_queue[0].userId == appState.userId) $('.media-box .controls').addClass('mine');
 		else $('.media-box .controls').removeClass('mine');
@@ -451,6 +455,10 @@ function gapiLoaded(){google_loaded=true;}
 				modestbranding: 1
 			}
 		});
+		if (/(Android|i(Pad|Pod|Phone))/.test(navigator.userAgent)) {
+			$('.media-box .controls').css('display','none');
+			appState.has_played=false;
+		}
 	};
 	seek_advance = setInterval(function(){
 		if (appState.media_queue && appState.media_queue.length>0) {
